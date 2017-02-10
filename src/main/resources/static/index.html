@@ -43,12 +43,19 @@
 				<!-- Navigation. We hide it in small screens. -->
 				<nav class="mdl-navigation mdl-layout--large-screen-only">
 					<div class="loggedContainer">
-						<span id="userName"></span> <img id="userImage"
+						<span id="userName"></span>
+
+						<button id="menu-lower-right"
+							class="mdl-button mdl-js-button mdl-button--icon">
+							 <img id="userImage"
 							style="border-radius: 50%" height="26px">
-						<div>
-							<button id="logoutButton"
-								class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Logout</button>
-						</div>
+						</button>
+
+						<ul
+							class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+							for="menu-lower-right">
+							<li id="logoutButton" class="mdl-menu__item">Logout</li>
+						</ul>
 					</div>
 					<div class="container">
 						<button id="signIn"
@@ -71,12 +78,12 @@
 		<div class="container" style="width: 60%; padding-left: 30px">
 			<div class="mdl-grid">
 				<div class="mdl-cell mdl-cell--6-col">
-					<h3 id="frase">"As grandes idéias são aquelas nas quais a única coisa que
-						nos surpreende é que não nos tivessem ocorrido antes."</h3>
+					<h3 id="frase">"As grandes idéias são aquelas nas quais a
+						única coisa que nos surpreende é que não nos tivessem ocorrido
+						antes."</h3>
 				</div>
-				<div class="mdl-tooltip mdl-tooltip--large" for="frase">
-					Noel Clarasó
-				</div>
+				<div class="mdl-tooltip mdl-tooltip--large" for="frase">Noel
+					Clarasó</div>
 				<div class="mdl-cell mdl-cell--5-col">
 					<img
 						src="http://solarisintelligence.com/wp-content/uploads/2016/08/sharepoint-collaboration.jpg">

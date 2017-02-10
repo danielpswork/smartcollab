@@ -28,6 +28,21 @@
 .demo-card-wide>.mdl-card__menu {
 	color: #fff;
 }
+
+.user-image {
+	border-radius: 50%;
+	height: 45px;
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+.user-label {
+	font-size: 18px;
+	padding-right: 5px;
+}
+
 </style>
 </head>
 <body>
@@ -43,17 +58,14 @@
 				<!-- Navigation. We hide it in small screens. -->
 				<nav class="mdl-navigation mdl-layout--large-screen-only">
 					<div class="loggedContainer">
-						<span id="userName"></span>
-
-						<button id="menu-lower-right"
-							class="mdl-button mdl-js-button mdl-button--icon">
-							 <img id="userImage"
-							style="border-radius: 50%" height="26px">
-						</button>
+						<div id="userMenu" class="clickable">
+							<span id="userName" class="user-label"></span> 
+							<img id="userImage" class="user-image">
+						</div>
 
 						<ul
 							class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-							for="menu-lower-right">
+							for="userMenu">
 							<li id="logoutButton" class="mdl-menu__item">Logout</li>
 						</ul>
 					</div>

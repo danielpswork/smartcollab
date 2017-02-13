@@ -1,7 +1,8 @@
 $(document).ready(function() {
 	
-	$('.loggedContainer').hide()
-	$('.container').show()
+	$('.loggedContainer').hide();
+	$('.container').show();
+	var snackbarContainer = document.querySelector('#demo-toast-example');
 	
 	$.ajax({
 		url: '/user'
@@ -46,9 +47,11 @@ $(document).ready(function() {
 			data: JSON.stringify(data),
 			contentType: "application/json"
 		}).then(function(cardId) {
-			console.log('Sucesso')
+			var data = {message: 'Card salvo com id: ' + cardId};
+		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 		}).catch(function(err) {
-			console.log('Err', JSON.stringify(err))
+			var data = {message: 'Erro ao salvar o card: ' + cardJSON.stringify(err)};
+		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 		})
 	})
 	
@@ -78,10 +81,6 @@ function createCards() {
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
 	})
-	
-	
-	
-	
 }
 
 function createCard(id, title, login, description, date, size) {

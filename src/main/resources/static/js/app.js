@@ -34,15 +34,54 @@ $(document).ready(function() {
 		})
 	})
 	
+	$('#saveFormButton').click(function() {
+		var data = {
+			title: $('#titleForm').val(),
+			description: $('#descriptionForm').val()
+		}
+		
+		$.ajax({
+			url: '/cards',
+			method: 'POST',
+			data: JSON.stringify(data),
+			contentType: "application/json"
+		}).then(function(cardId) {
+			console.log('Sucesso')
+		}).catch(function(err) {
+			console.log('Err', JSON.stringify(err))
+		})
+	})
+	
+	var dialog = document.querySelector('dialog');
+    var showDialogButton = document.querySelector('#show-dialog');
+    if (! dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+    }
+    showDialogButton.addEventListener('click', function() {
+      dialog.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function() {
+      dialog.close();
+    });
+	
 })
 
 function createCards() {
 	$('#cards').html('');
-	createCard(1, 'Card 1 ', 'danielps', 'Texto do Card 1 jkshf kjhsdf ksjdhdf kjsdkfjhskdj', '15/11/2016', 3);
-	createCard(2, 'Card 2 ', 'tfonseca', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', '02/09/2016', 3);
-	createCard(3, 'Card 3 ', 'danielps', 'Texto do Card 3', '19/01/2017', 3);
-	createCard(4, 'Card 4 ', 'tfonseca', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', '04/02/2017', 3);
-	createCard(5, 'Card 5 ', 'danielps', 'Texto do Card 5', '10/12/2016', 3);
+	
+	$.ajax({
+		url: '/cards'
+	}).then(function(data){
+		data.forEach(function(element) {
+			createCard(element.id, element.title, null, element.description, null, 3);
+		})
+	}).catch(function(err){
+		console.log('Error: ' + JSON.stringify(err));
+	})
+	
+	
+	
+	
 }
 
 function createCard(id, title, login, description, date, size) {

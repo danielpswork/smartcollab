@@ -18,7 +18,8 @@ public class CardService {
         return repository.findAll();
     }
 
-    public void saveCard(Card newCard) {
-        repository.save(newCard);
+    public String saveCard(Card newCard) {
+        Card card = repository.save(newCard);
+        return card.getId();
     }
 }

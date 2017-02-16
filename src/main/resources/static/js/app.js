@@ -2,6 +2,7 @@ $(document).ready(function() {
 	
 	$('.loggedContainer').hide();
 	$('.container').show();
+	
 	var snackbarContainer = document.querySelector('#demo-toast-example');
 	
 	$.ajax({
@@ -16,23 +17,6 @@ $(document).ready(function() {
 		
 	}).catch(function(err){
 		console.log(err);
-	})
-	
-	$('#signIn').click(function() {
-		document.location.href='/login';
-	})	
-	
-	$('#logoutButton').click(function() {
-		$.ajax({
-			url: '/logout',
-			method: 'POST'
-		}).then(function(data, result, response) {
-			$('.loggedContainer').hide()
-			$('.container').show()
-			console.log('Success');
-		}).catch(function(err01, err02, err03) {
-			console.log('Error');
-		})
 	})
 	
 	$('#saveFormButton').click(function() {
@@ -55,7 +39,7 @@ $(document).ready(function() {
 		})
 	})
 	
-	var dialog = document.querySelector('dialog');
+	var dialog = document.querySelector('dialog#insertDialog');
     var showDialogButton = document.querySelector('#show-dialog');
     if (! dialog.showModal) {
       dialogPolyfill.registerDialog(dialog);

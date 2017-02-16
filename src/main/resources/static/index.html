@@ -48,7 +48,7 @@
 </head>
 <body>
 
-	<!-- Always shows a header, even in smaller screens. -->
+	<!-- CABEÇALHO -->
 	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 		<header class="mdl-layout__header">
 			<div class="mdl-layout__header-row">
@@ -78,15 +78,17 @@
 				</nav>
 			</div>
 		</header>
+		
+		<!-- MENU -->
 		<div class="mdl-layout__drawer">
-			<span class="mdl-layout-title">Title</span>
-			<nav class="mdl-navigation">
-				<a class="mdl-navigation__link" href="">Link</a> <a
-					class="mdl-navigation__link" href="">Link</a> <a
-					class="mdl-navigation__link" href="">Link</a> <a
-					class="mdl-navigation__link" href="">Link</a>
+			<span class="mdl-layout-title">Menu</span>
+			<nav id="menu" class="mdl-navigation">
+				<a class="mdl-navigation__link" href="">Home</a> 
+				<a class="mdl-navigation__link" href="">Minhas idéias</a> 
 			</nav>
 		</div>
+		
+		<!-- CONTEÚDO -->
 		<main class="mdl-layout__content">
 		<div class="container" style="width: 60%; padding-left: 30px">
 			<div class="mdl-grid">
@@ -111,7 +113,7 @@
 					<i class="material-icons">add</i>
 				</button>
 
-				<dialog class="mdl-dialog">
+				<dialog id="insertDialog" class="mdl-dialog">
 				<h4 class="mdl-dialog__title">New idea</h4>
 				<div class="mdl-dialog__content">
 					<div
@@ -139,19 +141,45 @@
 			</div>
 		</div>
 
-
+		<dialog id="aboutDialog" style="witdh:50%" class="mdl-dialog">			
+			<h4 class="mdl-dialog__title">Sobre</h4>
+		    <div class="mdl-dialog__content">
+		      <p>Sistema responsável por manter uma base de idéias, mantidas pelos próprios colaboradores da CI&T.</p>
+		      <p>Tecnologias utilizadas:</p>
+		      <ul class="demo-list-item mdl-list">
+				  <li class="mdl-list__item">
+				    <span class="mdl-list__item-primary-content">
+				      Material Design Lite
+				    </span>
+				  </li>
+				  <li class="mdl-list__item">
+				    <span class="mdl-list__item-primary-content">
+				      JQuery
+				    </span>
+				  </li>
+				  <li class="mdl-list__item">
+				    <span class="mdl-list__item-primary-content">
+				      Spring Boot
+				    </span>
+				  </li>
+				</ul>
+		    </div>
+			<div class="mdl-dialog__actions">
+				<button type="button" class="mdl-button close">Fechar</button>
+			</div>		
+		</dialog> 
+		
+		<!-- RODAPÉ -->
 		<footer class="mdl-mini-footer">
 			<div class="mdl-mini-footer__left-section">
-				<div class="mdl-logo">Title</div>
+				<div class="mdl-logo">SmartCollab</div>
 				<ul class="mdl-mini-footer__link-list">
-					<li><a href="#">Help</a></li>
-					<li><a href="#">Privacy & Terms</a></li>
+					<li><a id="about" href="#">Sobre</a></li>
 				</ul>
 			</div>
-		</footer> </main>
+		</footer> 
+	</main>
 	</div>
-
-
 
 	<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 	<script

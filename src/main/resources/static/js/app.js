@@ -31,10 +31,13 @@ $(document).ready(function() {
 			data: JSON.stringify(data),
 			contentType: "application/json"
 		}).then(function(cardId) {
-			var data = {message: 'Card salvo com id: ' + cardId};
+			createCards();
+			$('#titleForm').val('');
+			$('#descriptionForm').val('');
+			var data = {message: 'Card salvo com sucesso!', timeout: 5000};
 		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 		}).catch(function(err) {
-			var data = {message: 'Erro ao salvar o card: ' + cardJSON.stringify(err)};
+			var data = {message: 'Erro ao salvar o card: ' + cardJSON.stringify(err), timeout: 5000};
 		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 		})
 	})

@@ -29,7 +29,7 @@ public class CardsApi {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public String getCards(@RequestBody Card card) {
+    public String saveCard(@RequestBody Card card) {
         return service.saveCard(card);
     }
 }

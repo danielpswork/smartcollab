@@ -1,8 +1,8 @@
 security:
     oauth2:
         client:
-            clientId: 123
-            clientSecret: 123
+            clientId: 1075756127724-sf91qa0328t0sapivrpkg982lg758j62.apps.googleusercontent.com
+            clientSecret: 3ZAcnnTiGclnzsPTSnPX6PPa
             accessTokenUri: https://www.googleapis.com/oauth2/v3/token
             userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
             tokenName: oauth_token

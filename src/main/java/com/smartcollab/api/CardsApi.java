@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,10 +27,40 @@ public class CardsApi {
     public List<Card> getCards() {
         return service.getCards();
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    @ResponseBody
+    public Card getCardById(@PathVariable String id) {
+        return service.getCardById(id);
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public String saveCard(@RequestBody Card card) {
         return service.saveCard(card);
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/{moderator}")
+    @ResponseBody
+    public void setModerator(@PathVariable String id,@PathVariable String moderator) {
+         Card card = service.getCardById(id);
+         card.setModerator(moderator);
+         saveCard(card);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "like/{id}/{login}")
+    @ResponseBody
+    public int like(@PathVariable String id,@PathVariable String login) {
+         Card card = service.getCardById(id);
+         if(card.getLikes().contains(login)) {
+             card.getLikes().remove(login);
+         } else {
+             card.getLikes().add(login);
+         }
+         
+         saveCard(card);        	 
+         return card.getLikes().size();
+    }
+    
+    
 }

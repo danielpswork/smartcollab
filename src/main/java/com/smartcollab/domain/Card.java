@@ -1,6 +1,10 @@
 package com.smartcollab.domain;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,6 +19,10 @@ public class Card implements Serializable {
 
     @Id
     private String id;
+    private String login;
     private String title;
     private String description;
+    private LocalDate dateTime;
+    private String moderator;
+    private Set<String> likes = new HashSet<String>();
 }

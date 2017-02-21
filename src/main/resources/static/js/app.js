@@ -1,7 +1,14 @@
+var email;
+
+function convertDateTime(dateTime){
+	return dateTime.dayOfMonth + "/" + dateTime.monthValue + "/" + dateTime.year;
+}
+
+
 $(document).ready(function() {
 	
 	$('.loggedContainer').hide();
-	$('.container').show();
+	$('.container').show();	
 	
 	var snackbarContainer = document.querySelector('#demo-toast-example');
 	
@@ -12,17 +19,19 @@ $(document).ready(function() {
 		$('.container').hide()
 		$('#userName').html(data.userAuthentication.details.name);
 		$('#userImage').attr("src", data.userAuthentication.details.picture);
-		
+		email = data.userAuthentication.details.email;
+				
 		createCards();
 		
 	}).catch(function(err){
 		console.log(err);
 	})
 	
-	$('#saveFormButton').click(function() {
+	$('#saveFormButton').click(function() {		
 		var data = {
 			title: $('#titleForm').val(),
-			description: $('#descriptionForm').val()
+			description: $('#descriptionForm').val(),		
+			login: email.split("@")[0]
 		}
 		
 		$.ajax({
@@ -57,20 +66,30 @@ $(document).ready(function() {
 })
 
 function createCards() {
+	
 	$('#cards').html('');
 	
 	$.ajax({
 		url: '/cards'
 	}).then(function(data){
 		data.forEach(function(element) {
-			createCard(element.id, element.title, null, element.description, null, 3);
+			element.dateTime = convertDateTime(element.dateTime);
+			
+			createCard(element.id, 
+						element.title, 
+						element.login, 
+						element.description, 
+						element.dateTime, 
+						3,
+						element.moderator,
+						element.likes);
 		})
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
 	})
 }
 
-function createCard(id, title, login, description, date, size) {
+function createCard(id, title, login, description, date, size, moderator, likes) {
 	
 	var descriptionId = 'description_' + id;
 	
@@ -87,13 +106,20 @@ function createCard(id, title, login, description, date, size) {
 	} else {
 		cardHtml += '</div>';
 	}
-	cardHtml += 			'<div style="position: absolute; bottom: 60px;" >';
+	cardHtml += 			'<div style="position: absolute; bottom: 120px;" >';
 	cardHtml += 				'Por: ' + login + '<br/>';
-	cardHtml += 				'Data: ' + date;
+	cardHtml += 				'Data: ' + date + '<br/>';
+	cardHtml += 				'Moderador: ' + (moderator==null ? "Não definido" : moderator);
 	cardHtml += 			'</div>';
 	cardHtml += '		</div>'
 	cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
-	cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar </a>';
+	cardHtml += '				<button  onclick="like(&quot;'+id+'&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">';
+	cardHtml += '	  				<i class="material-icons">thumb_up</i>';
+	cardHtml += '				</button>';
+	cardHtml += '				' + (likes==null ? 0 : likes.length);
+	cardHtml += '		</div>';
+	cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
+	cardHtml += '			<a onclick="beModerator(&quot;'+id+'&quot;)" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar </a>';
 	cardHtml += '		</div>';
 	cardHtml += '		<div class="mdl-card__menu">';
 	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
@@ -104,4 +130,32 @@ function createCard(id, title, login, description, date, size) {
 	
 	$('#cards').html($('#cards').html() + cardHtml);
 	
+}
+
+function beModerator(id) {
+	
+	var card;
+	$.ajax({
+		url: '/cards/' + id+'/'+email.split("@")[0],
+		method: 'GET',
+		contentType: "application/json"		
+	}).then(function(){	    
+	    createCards();		
+	}).catch(function(err){
+		console.log('Error: ' + JSON.stringify(err));
+	})
+	
+}
+
+function like(id) {
+	var card;
+	$.ajax({
+		url: '/cards/like/' + id+'/'+email.split("@")[0],
+		method: 'GET',
+		contentType: "application/json"		
+	}).then(function(data){	    
+	    createCards();		
+	}).catch(function(err){
+		console.log('Error: ' + JSON.stringify(err));
+	})
 }

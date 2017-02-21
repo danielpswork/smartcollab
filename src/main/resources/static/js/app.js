@@ -72,7 +72,11 @@ function createCards() {
 	}).then(function(data){
 		data.forEach(function(element) {
 			createCard(element.id, element.title, element.author, element.description, element.moderator, element.creationDate, 3);
-		})
+		});
+	    $('a[name="moderate"]').click(function(){
+	    	var button = this;
+	    	updateModerator(button, $(this).parents().eq(2)[0].id , login);
+	    });
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
 	})
@@ -82,7 +86,7 @@ function createCard(id, title, login, description, moderator, date, size) {
 	
 	var descriptionId = 'description_' + id;
 	
-	var cardHtml = '<div class="mdl-cell mdl-cell--' + size + '-col">';
+	var cardHtml = '<div id="' + id + '" class="mdl-cell mdl-cell--' + size + '-col">';
 	cardHtml += '		<div class="demo-card-wide mdl-card mdl-shadow--2dp">';
 	cardHtml += '			<div class="mdl-card__title">';
 	cardHtml += '				<h2 class="mdl-card__title-text">' + title + '</h2>';
@@ -103,7 +107,7 @@ function createCard(id, title, login, description, moderator, date, size) {
 	cardHtml += '		</div>'
 	cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
 	if(!moderator) {
-		cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar</a>';
+		cardHtml += '			<a name="moderate" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar</a>';
 	}
 	cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">1<i class="material-icons">thumb_up</i></a>';
 	cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">1<i class="material-icons">comment</i></a>';
@@ -116,5 +120,40 @@ function createCard(id, title, login, description, moderator, date, size) {
 	cardHtml += '	</div>';
 	
 	$('#cards').html($('#cards').html() + cardHtml);
+	
+}
+
+function updateModerator(button, id, login){
+	
+	var snackbarContainer = document.querySelector('#demo-toast-example');
+	var card;
+	$.ajax({
+		url: '/cards/' + id
+	}).then(function(data){
+		this.card = data;
+		this.card['moderator'] = login;
+
+		$.ajax({
+			url: '/cards',
+			method: 'POST',
+			data: JSON.stringify(this.card),
+			contentType: "application/json"
+		}).then(function(cardId) {
+			//update card moderator
+			var data = {message: 'Moderador alterado com sucesso!', timeout: 5000};
+		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+		}).catch(function(err) {
+			var data = {message: 'Erro ao salvar o moderador! ', timeout: 5000};
+		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+		})
+		
+		$(button.parentElement.parentElement.parentElement).remove();
+    	createCard(this.card.id, this.card.title, this.card.author,
+    			this.card.description, this.card.moderator,
+    			this.card.creationDate, 3);
+
+	}).catch(function(err){
+		console.log('Error: ' + JSON.stringify(err));
+	});
 	
 }

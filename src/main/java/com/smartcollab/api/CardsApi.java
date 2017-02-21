@@ -18,18 +18,26 @@ import com.smartcollab.service.CardService;
 @RequestMapping("/cards")
 public class CardsApi {
 
-    @Autowired
-    private CardService service;
+	@Autowired
+	private CardService service;
 
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
-    public List<Card> getCards() {
-        return service.getCards();
-    }
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseBody
+	public List<Card> getCards() {
+		return service.getCards();
+	}
 
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    public String saveCard(@RequestBody Card card) {
-        return service.saveCard(card);
-    }
+	@RequestMapping(method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	public String saveCard(@RequestBody Card card) {
+		return service.saveCard(card);
+	}
+
+	@RequestMapping(path = "/updateCardModerator", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public String updateCardModerator(@RequestBody Card card) {
+		Card card2 = service.getCardById(card.getId());
+		card2.setLoginModerator(card.getLoginModerator());
+		return service.saveCard(card2);
+	}
 }

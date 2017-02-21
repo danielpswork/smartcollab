@@ -8,6 +8,8 @@ target/
 .project
 .settings
 .springBeans
+*.yml
+src/main/resources/application.yml
 
 ### IntelliJ IDEA ###
 .idea

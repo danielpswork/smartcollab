@@ -22,6 +22,8 @@ public class Card implements Serializable {
 	private String title;
 	private String description;
 	private LocalDate dateNow = LocalDate.now();
+	private Integer likes;
 	@Transient
 	private String displayDateNow = dateNow.toString(); // TODO dateFormat
+
 }

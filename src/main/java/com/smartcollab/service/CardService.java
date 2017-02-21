@@ -11,15 +11,19 @@ import com.smartcollab.repository.CardsRepository;
 @Service
 public class CardService {
 
-    @Autowired
-    private CardsRepository repository;
+	@Autowired
+	private CardsRepository repository;
 
-    public List<Card> getCards() {
-        return repository.findAll();
-    }
+	public List<Card> getCards() {
+		return repository.findAll();
+	}
 
-    public String saveCard(Card newCard) {
-        Card card = repository.save(newCard);
-        return card.getId();
-    }
+	public String saveCard(Card newCard) {
+		Card card = repository.save(newCard);
+		return card.getId();
+	}
+
+	public Card getCardById(String Id) {
+		return repository.findOne(Id);
+	}
 }

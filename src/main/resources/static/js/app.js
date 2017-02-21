@@ -71,14 +71,14 @@ function createCards() {
 		url: '/cards'
 	}).then(function(data){
 		data.forEach(function(element) {
-			createCard(element.id, element.title, element.author, element.description, element.creationDate, 3);
+			createCard(element.id, element.title, element.author, element.description, element.moderator, element.creationDate, 3);
 		})
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
 	})
 }
 
-function createCard(id, title, login, description, date, size) {
+function createCard(id, title, login, description, moderator, date, size) {
 	
 	var descriptionId = 'description_' + id;
 	
@@ -97,11 +97,16 @@ function createCard(id, title, login, description, date, size) {
 	}
 	cardHtml += 			'<div style="position: absolute; bottom: 60px;" >';
 	cardHtml += 				'Por: ' + login + '<br/>';
-	cardHtml += 				'Data: ' + date;
+	cardHtml += 				'Data: ' + date + '<br/>';
+	cardHtml +=					'Moderador: ' + moderator;
 	cardHtml += 			'</div>';
 	cardHtml += '		</div>'
 	cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
-	cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar </a>';
+	if(!moderator) {
+		cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar</a>';
+	}
+	cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">1<i class="material-icons">thumb_up</i></a>';
+	cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">1<i class="material-icons">comment</i></a>';
 	cardHtml += '		</div>';
 	cardHtml += '		<div class="mdl-card__menu">';
 	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';

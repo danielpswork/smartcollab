@@ -30,7 +30,8 @@ $(document).ready(function() {
 			title: $('#titleForm').val(),
 			description: $('#descriptionForm').val(),
 			author: login,
-			creationDate: dates[2] + '/' + dates[1] + '/' + dates[0]
+			creationDate: dates[2] + '/' + dates[1] + '/' + dates[0],
+			votedUsersNumber: 0
 		}
 		
 		$.ajax({
@@ -61,7 +62,6 @@ $(document).ready(function() {
     dialog.querySelector('.close').addEventListener('click', function() {
       dialog.close();
     });
-	
 })
 
 function createCards() {
@@ -71,7 +71,7 @@ function createCards() {
 		url: '/cards'
 	}).then(function(data){
 		data.forEach(function(element) {
-			createCard(element.id, element.title, element.author, element.description, element.moderator, element.creationDate, 3);
+			createCard(element.id, element.title, element.author, element.description, element.moderator, element.creationDate, 3, element.votedUsersNumber);
 		});
 	    $('a[name="moderate"]').click(function(){
 	    	var button = this;
@@ -82,7 +82,7 @@ function createCards() {
 	})
 }
 
-function createCard(id, title, login, description, moderator, date, size) {
+function createCard(id, title, login, description, moderator, date, size, votedUsersNumber) {
 	
 	var descriptionId = 'description_' + id;
 	
@@ -102,15 +102,20 @@ function createCard(id, title, login, description, moderator, date, size) {
 	cardHtml += 			'<div style="position: absolute; bottom: 60px;" >';
 	cardHtml += 				'Por: ' + login + '<br/>';
 	cardHtml += 				'Data: ' + date + '<br/>';
-	cardHtml +=					'Moderador: ' + moderator;
+	if(moderator!=null) {
+		cardHtml +=					'Moderador: ' + moderator;
+	}
+	else {
+		cardHtml +=					'Moderador: Sem moderador';
+	}
 	cardHtml += 			'</div>';
 	cardHtml += '		</div>'
 	cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
 	if(!moderator) {
 		cardHtml += '			<a name="moderate" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar</a>';
 	}
-	cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">1<i class="material-icons">thumb_up</i></a>';
-	cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">1<i class="material-icons">comment</i></a>';
+	cardHtml += '			<a onclick="updateNumberOfVoters()" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">' + votedUsersNumber + '<i class="material-icons">thumb_up</i></a>';
+	cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">0<i class="material-icons">comment</i></a>';
 	cardHtml += '		</div>';
 	cardHtml += '		<div class="mdl-card__menu">';
 	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
@@ -121,6 +126,9 @@ function createCard(id, title, login, description, moderator, date, size) {
 	
 	$('#cards').html($('#cards').html() + cardHtml);
 	
+}
+
+function updateNumberOfVoters(button, id, login){
 }
 
 function updateModerator(button, id, login){

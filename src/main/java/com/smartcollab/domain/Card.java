@@ -1,7 +1,7 @@
 package com.smartcollab.domain;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,4 +21,5 @@ public class Card implements Serializable {
     private String author;
     private String creationDate;
     private String moderator;
+    private Set<String> votedUsers;
 }

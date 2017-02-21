@@ -39,4 +39,17 @@ public class CardsApi {
     public String saveCard(@RequestBody Card card) {
         return service.saveCard(card);
     }
+    
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public int updateLike(@PathVariable(name="id") String id, @PathVariable(name="author") String author) {
+    	Card card = service.getCardById(id);
+    	if(!card.getVotedUsers().contains(author)) {
+    		card.getVotedUsers().add(author);
+    		return card.getVotedUsers().size();
+    	} else {
+    		card.getVotedUsers().remove(author);
+    		return card.getVotedUsers().size();
+    	}
+    }
 }

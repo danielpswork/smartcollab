@@ -3,6 +3,7 @@ $(document).ready(function() {
 	$('.loggedContainer').hide();
 	$('.container').show();
 	
+	var userLogin;
 	var snackbarContainer = document.querySelector('#demo-toast-example');
 	
 	$.ajax({
@@ -13,16 +14,20 @@ $(document).ready(function() {
 		$('#userName').html(data.userAuthentication.details.name);
 		$('#userImage').attr("src", data.userAuthentication.details.picture);
 		
+		userLogin = data.userAuthentication.details.email;
+		
 		createCards();
 		
 	}).catch(function(err){
 		console.log(err);
 	})
 	
+	/* Save new card */
 	$('#saveFormButton').click(function() {
 		var data = {
 			title: $('#titleForm').val(),
-			description: $('#descriptionForm').val()
+			description: $('#descriptionForm').val(),
+			loginCreator: userLogin
 		}
 		
 		$.ajax({
@@ -56,6 +61,7 @@ $(document).ready(function() {
 	
 })
 
+/* createCards retrieves cards and display them on screen */
 function createCards() {
 	$('#cards').html('');
 	
@@ -63,13 +69,14 @@ function createCards() {
 		url: '/cards'
 	}).then(function(data){
 		data.forEach(function(element) {
-			createCard(element.id, element.title, null, element.description, null, 3);
+			createCard(element.id, element.title, element.loginCreator, element.description, element.displayDateNow, 3);
 		})
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
 	})
 }
 
+/* Mounts cards to be displayed on the screen */
 function createCard(id, title, login, description, date, size) {
 	
 	var descriptionId = 'description_' + id;

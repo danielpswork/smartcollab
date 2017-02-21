@@ -40,4 +40,16 @@ public class CardsApi {
 		card2.setLoginModerator(card.getLoginModerator());
 		return service.saveCard(card2);
 	}
+
+	@RequestMapping(path = "/updateCardLike", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public String updateCardLike(@RequestBody Card card) {
+		Card card2 = service.getCardById(card.getId());
+		if (card2.getUserLikes().contains(card.getLoggedUser())) {
+			card2.getUserLikes().remove(card.getLoggedUser());
+		} else {
+			card2.getUserLikes().add(card.getLoggedUser());
+		}
+		return service.saveCard(card2);
+	}
 }

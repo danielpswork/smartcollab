@@ -85,6 +85,29 @@ function saveModerator(pid) {
 	})
 }
 
+/* saveModeratorturns logged user into a moderator */
+function updateCardLike(pid) { 
+	var data = {
+		id: pid,
+		loggedUser: userLogin.split('@')[0]
+	}
+	
+	$.ajax({
+		url: '/cards/updateCardLike',
+		method: 'POST',
+		data: JSON.stringify(data),
+		contentType: "application/json"
+	}).then(function(cardId) {
+		createCards();
+		var data = {message: 'Voto registrado com sucesso!', timeout: 5000};
+	    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+	}).catch(function(err) {
+		var data = {message: 'Erro ao salvar o Moderador: ' + cardJSON.stringify(err), timeout: 5000};
+	    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+	})
+}
+
+
 /* createCards retrieves cards and display them on screen */
 function createCards() {
 	$('#cards').html('');
@@ -93,7 +116,7 @@ function createCards() {
 		url: '/cards'
 	}).then(function(data){
 		data.forEach(function(element) {
-			createCard(element.id, element.title, element.loginCreator, element.loginModerator, element.description, element.displayDateNow, element.likes, 3);
+			createCard(element.id, element.title, element.loginCreator, element.loginModerator, element.description, element.displayDateNow, element.userLikes, 3);
 		})
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
@@ -137,8 +160,8 @@ function createCard(id, title, login, loginModerator, description, date, likes, 
 		cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
 	}
 	
-	cardHtml += '		<a><i class="material-icons likeButton">plus_one</i></a> 5';
-	cardHtml += '		<a><i class="material-icons commentButton">mode_comment</i></a> 5';
+	cardHtml += '		<a><i onClick="updateCardLike(\''+id+'\')" class="material-icons likeButton">plus_one</i></a> ' + likes.length;
+	cardHtml += '		<a><i class="material-icons commentButton">mode_comment</i></a> ';
 	cardHtml += '		</div>';
 	cardHtml += '		<div class="mdl-card__menu">';
 	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';

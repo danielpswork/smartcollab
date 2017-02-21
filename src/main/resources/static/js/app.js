@@ -1,3 +1,5 @@
+var login;
+
 $(document).ready(function() {
 	
 	$('.loggedContainer').hide();
@@ -12,6 +14,7 @@ $(document).ready(function() {
 		$('.container').hide()
 		$('#userName').html(data.userAuthentication.details.name);
 		$('#userImage').attr("src", data.userAuthentication.details.picture);
+		login = data.userAuthentication.details.email.split('@')[0];
 		
 		createCards();
 		
@@ -20,9 +23,14 @@ $(document).ready(function() {
 	})
 	
 	$('#saveFormButton').click(function() {
+		
+		var dates = new Date().toJSON().slice(0,10).split('-');
+
 		var data = {
 			title: $('#titleForm').val(),
-			description: $('#descriptionForm').val()
+			description: $('#descriptionForm').val(),
+			author: login,
+			creationDate: dates[2] + '/' + dates[1] + '/' + dates[0]
 		}
 		
 		$.ajax({
@@ -63,7 +71,7 @@ function createCards() {
 		url: '/cards'
 	}).then(function(data){
 		data.forEach(function(element) {
-			createCard(element.id, element.title, null, element.description, null, 3);
+			createCard(element.id, element.title, element.author, element.description, element.creationDate, 3);
 		})
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));

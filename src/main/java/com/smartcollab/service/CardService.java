@@ -22,4 +22,8 @@ public class CardService {
         Card card = repository.save(newCard);
         return card.getId();
     }
+
+	public Card getCardById(String id) {
+		return repository.findOne(id);
+	}
 }

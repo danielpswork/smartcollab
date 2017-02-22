@@ -1,9 +1,11 @@
-#modal-comments {
-  width: 800px;
+.modal-comments {
+	width: 800px;
+	margin: 0 auto;
+	text-align: center;
 }
 
 @media screen and (max-width: 480px) {
-  #modal-comments {
-    width: 100%;
-  }
+	.modal-comments {
+		width: 100%;
+	}
 }

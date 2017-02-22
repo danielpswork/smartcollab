@@ -63,8 +63,8 @@ $(document).ready(function() {
 	
 })
 
-
 function openCommentModal(id){
+	
 	  var dialogComments = document.querySelector('dialog#insertComments');
 	  var showDialogButtonComments = document.querySelector('.commentButton');
 	    if (!dialogComments.showModal) {
@@ -76,6 +76,11 @@ function openCommentModal(id){
 	    dialogComments.querySelector('.close').addEventListener('click', function() {
 	    	dialogComments.close();
 	    });
+	    
+	    dialogComments.querySelector('.saveCommentButton').addEventListener('click', function() {
+	    	saveComment(id);}
+	    );
+	    
 }
 
 /* saveModeratorturns logged user into a moderator */
@@ -84,7 +89,6 @@ function saveModerator(pid) {
 		id: pid,
 		loginModerator: userLogin.split('@')[0]
 	}
-	
 	$.ajax({
 		url: '/cards/updateCardModerator',
 		method: 'POST',
@@ -96,6 +100,37 @@ function saveModerator(pid) {
 	    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 	}).catch(function(err) {
 		var data = {message: 'Erro ao salvar o Moderador: ' + cardJSON.stringify(err), timeout: 5000};
+	    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+	})
+}
+
+/* Save new comment */
+function saveComment(pid) { 
+	
+	var commentTextarea = $('#commentForm').val();
+	
+	if ( !commentTextarea || commentTextarea.length === 0 ) {
+		return;
+	}
+	
+	var data = {
+		id: pid,
+		loggedUser: userLogin.split('@')[0],
+		comment: commentTextarea
+	}
+
+	$.ajax({
+		url: '/cards/saveComment',
+		method: 'POST',
+		data: JSON.stringify(data),
+		contentType: "application/json"
+	}).then(function(cardId) {
+		var data = {message: 'Comentário salvo com sucesso!', timeout: 5000};
+	    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+	    $('#commentForm').val("");
+    	createCards();
+	}).catch(function(err) {
+		var data = {message: 'Erro ao adicionar comentário: ' + cardJSON.stringify(err), timeout: 5000};
 	    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 	})
 }
@@ -130,8 +165,8 @@ function createCards() {
 	$.ajax({
 		url: '/cards'
 	}).then(function(data){
-		data.forEach(function(element) {
-			createCard(element.id, element.title, element.loginCreator, element.loginModerator, element.description, element.displayDateNow, element.userLikes, 3);
+	data.forEach(function(element) {
+			createCard(element.id, element.title, element.loginCreator, element.loginModerator, element.description, element.displayDateNow, element.userLikes, element.cardComments, 3);
 		})
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
@@ -139,7 +174,7 @@ function createCards() {
 }
 
 /* Mounts cards to be displayed on the screen */
-function createCard(id, title, login, loginModerator, description, date, likes, size) {
+function createCard(id, title, login, loginModerator, description, date, likes, comments, size) {
 	
 	var descriptionId = 'description_' + id;
 	
@@ -163,7 +198,7 @@ function createCard(id, title, login, loginModerator, description, date, likes, 
 		cardHtml += 			'</div>';
 		cardHtml += '		</div>';
 		cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
-		cardHtml += '			<a onClick="saveModerator(\''+id+'\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect moderarButton">Moderar</a>';
+		cardHtml += '			<button onClick="saveModerator(\''+id+'\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect moderarButton">Moderar</button>';
 	}
 	else{
 		cardHtml += 			'<div style="position: absolute; bottom: 60px;" >';
@@ -176,7 +211,7 @@ function createCard(id, title, login, loginModerator, description, date, likes, 
 	}
 
 	cardHtml += '		<button onClick="updateCardLike(\''+id+'\')" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect likeButton"><i class="material-icons">thumb_up</i></button> ' + likes.length;
-	cardHtml += '		<button onClick="openCommentModal(\''+id+'\')" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect commentButton"><i class="material-icons">mode_comment</i></button> ';
+	cardHtml += '		<button onClick="openCommentModal(\''+id+'\')" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect commentButton"><i class="material-icons">mode_comment</i></button> ' + comments.length;
 	cardHtml += '		</div>';
 	cardHtml += '		<div class="mdl-card__menu">';
 	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';

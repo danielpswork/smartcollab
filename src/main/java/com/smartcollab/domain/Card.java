@@ -2,7 +2,9 @@ package com.smartcollab.domain;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
@@ -25,9 +27,12 @@ public class Card implements Serializable {
 	private String description;
 	private LocalDate dateNow = LocalDate.now();
 	private Set<String> userLikes = new HashSet<String>();
+	private List<Comment> cardComments = new ArrayList<Comment>();
 	@Transient
-	private String displayDateNow = dateNow.toString(); // TODO dateFormat
+	private String displayDateNow = dateNow.toString(); // dateFormat
 	@Transient
-	private String loggedUser; // TODO dateFormat
+	private String loggedUser;
+	@Transient
+	private String comment;
 
 }

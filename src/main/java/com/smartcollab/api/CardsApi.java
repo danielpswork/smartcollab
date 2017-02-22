@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smartcollab.domain.Card;
+import com.smartcollab.domain.Comment;
 import com.smartcollab.service.CardService;
 
 @RestController
@@ -50,6 +51,19 @@ public class CardsApi {
 		} else {
 			card2.getUserLikes().add(card.getLoggedUser());
 		}
+		return service.saveCard(card2);
+	}
+
+	@RequestMapping(path = "/saveComment", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public String saveComment(@RequestBody Card card) {
+		Card card2 = service.getCardById(card.getId());
+
+		Comment comment = new Comment();
+		comment.setUser(card.getLoggedUser());
+		comment.setComment(card.getComment());
+
+		card2.getCardComments().add(comment);
 		return service.saveCard(card2);
 	}
 }

@@ -62,6 +62,7 @@ $(document).ready(function() {
     dialog.querySelector('.close').addEventListener('click', function() {
       dialog.close();
     });
+    
 })
 
 function createCards() {
@@ -115,7 +116,7 @@ function createCard(id, title, login, description, moderator, date, size, votedU
 		cardHtml += '			<a name="moderate" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar</a>';
 	}
 	cardHtml += '			<a onclick="updateNumberOfVoters(\''+ id +'\',\'' + login +'\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">' + votedUsersNumber + '<i class="material-icons">thumb_up</i></a>';
-	cardHtml += '			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">0<i class="material-icons">comment</i></a>';
+	cardHtml += '			<a onclick="openCommentDialog(\'' + id + '\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">0<i class="material-icons">comment</i></a>';
 	cardHtml += '		</div>';
 	cardHtml += '		<div class="mdl-card__menu">';
 	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
@@ -174,4 +175,20 @@ function updateModerator(button, id, login){
 		console.log('Error: ' + JSON.stringify(err));
 	});
 	
+}
+
+function openCommentDialog(id) {
+	dialog = document.querySelector('dialog#commentDialog');
+	$.ajax({
+		url: '/cards/' + id
+	}).then(function(card){
+		$('h4#dialogCardTitle').html(card.title);
+		$('p#dialogCardDescription').html(card.description);
+	})
+	dialog.showModal();
+}
+
+function closeCommentDialog() {
+	dialog = document.querySelector('dialog#commentDialog');
+	dialog.close();
 }

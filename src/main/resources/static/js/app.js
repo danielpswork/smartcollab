@@ -63,6 +63,21 @@ $(document).ready(function() {
 	
 })
 
+
+function openCommentModal(id){
+	  var dialogComments = document.querySelector('dialog#insertComments');
+	  var showDialogButtonComments = document.querySelector('.commentButton');
+	    if (!dialogComments.showModal) {
+	      dialogPolyfill.registerDialog(dialogComments);
+	    }
+    
+	    dialogComments.showModal();
+	    
+	    dialogComments.querySelector('.close').addEventListener('click', function() {
+	    	dialogComments.close();
+	    });
+}
+
 /* saveModeratorturns logged user into a moderator */
 function saveModerator(pid) { 
 	var data = {
@@ -159,9 +174,9 @@ function createCard(id, title, login, loginModerator, description, date, likes, 
 		cardHtml += '		</div>';
 		cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
 	}
-	
-	cardHtml += '		<a><i onClick="updateCardLike(\''+id+'\')" class="material-icons likeButton">plus_one</i></a> ' + likes.length;
-	cardHtml += '		<a><i class="material-icons commentButton">mode_comment</i></a> ';
+
+	cardHtml += '		<button onClick="updateCardLike(\''+id+'\')" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect likeButton"><i class="material-icons">thumb_up</i></button> ' + likes.length;
+	cardHtml += '		<button onClick="openCommentModal(\''+id+'\')" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect commentButton"><i class="material-icons">mode_comment</i></button> ';
 	cardHtml += '		</div>';
 	cardHtml += '		<div class="mdl-card__menu">';
 	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';

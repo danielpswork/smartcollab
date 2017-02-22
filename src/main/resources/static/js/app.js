@@ -31,7 +31,7 @@ $(document).ready(function() {
 			description: $('#descriptionForm').val(),
 			author: login,
 			creationDate: dates[2] + '/' + dates[1] + '/' + dates[0],
-			votedUsers : []
+			votedUsers : null
 		}
 		
 		$.ajax({
@@ -158,7 +158,7 @@ function updateModerator(button, id, login){
 			data: JSON.stringify(this.card),
 			contentType: "application/json"
 		}).then(function(cardId) {
-			//update card moderator
+			// update card moderator
 			var data = {message: 'Moderador alterado com sucesso!', timeout: 5000};
 		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 		}).catch(function(err) {
@@ -184,8 +184,31 @@ function openCommentDialog(id) {
 	}).then(function(card){
 		$('h4#dialogCardTitle').html(card.title);
 		$('p#dialogCardDescription').html(card.description);
+		$('input[name=cardId]').val(card.id);
 	})
 	dialog.showModal();
+}
+
+function saveComment() {
+	var dates = new Date().toJSON().slice(0,10).split('-');
+	var comment = {
+			text: $('#commentForm').val(),
+			author: login,
+			creationDate : dates[2] + '/' + dates[1] + '/' + dates[0]
+	}
+
+	$.ajax({
+		url: '/cards/' + $('input[name=cardId]').val() +'/comment',
+		method: 'POST',
+		data: JSON.stringify(comment),
+		contentType: "application/json"
+	}).then(function(cardId) {
+		// update card moderator
+		var data = {message: 'Moderador alterado com sucesso!', timeout: 5000};
+	}).catch(function(err) {
+		var data = {message: 'Erro ao salvar o moderador! ', timeout: 5000};
+	})
+	
 }
 
 function closeCommentDialog() {

@@ -1,8 +1,6 @@
 package com.smartcollab.api;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smartcollab.domain.Card;
+import com.smartcollab.domain.Comment;
 import com.smartcollab.service.CardService;
 
 @RestController
@@ -40,6 +39,16 @@ public class CardsApi {
     @ResponseStatus(HttpStatus.OK)
     public String saveCard(@RequestBody Card card) {
         return service.saveCard(card);
+    }
+    
+    @RequestMapping(value="/{id}/comment", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Card comment(@PathVariable(name="id") String id, @RequestBody Comment comment){
+    	Card card = service.getCardById(id);
+    	card.getComment().add(comment);
+    	service.saveCard(card);
+    	return card;
     }
     
     @RequestMapping(path="/{id}/{author}", method = RequestMethod.GET)

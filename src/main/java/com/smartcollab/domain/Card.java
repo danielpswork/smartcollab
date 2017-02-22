@@ -27,6 +27,13 @@ public class Card implements Serializable {
     private Set<String> votedUsers = new HashSet<String>();
     private List<Comment> comments = new ArrayList<Comment>();
     
+    public List<Comment> getComment(){
+    	if(this.comments == null){
+    		this.comments = new ArrayList<Comment>();
+    	}
+    	return this.comments;
+    }
+    
     public void setVotedUsers(String author){
     	this.votedUsers.add(author);
     }

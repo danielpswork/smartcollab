@@ -1,6 +1,8 @@
 package com.smartcollab.api;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,16 +42,16 @@ public class CardsApi {
         return service.saveCard(card);
     }
     
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(path="/{id}/{author}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public int updateLike(@PathVariable(name="id") String id, @PathVariable(name="author") String author) {
+    public Card updateLike(@PathVariable(name="id") String id, @PathVariable(name="author") String author) {
     	Card card = service.getCardById(id);
     	if(!card.getVotedUsers().contains(author)) {
-    		card.getVotedUsers().add(author);
-    		return card.getVotedUsers().size();
+    		card.setVotedUsers(author);
     	} else {
-    		card.getVotedUsers().remove(author);
-    		return card.getVotedUsers().size();
+    		card.removeVotedUsers(author);
     	}
+    	service.saveCard(card);
+		return card;
     }
 }

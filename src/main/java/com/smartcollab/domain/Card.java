@@ -1,7 +1,9 @@
 package com.smartcollab.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
@@ -23,6 +25,7 @@ public class Card implements Serializable {
     private String creationDate;
     private String moderator;
     private Set<String> votedUsers = new HashSet<String>();
+    private List<Comment> comments = new ArrayList<Comment>();
     
     public void setVotedUsers(String author){
     	this.votedUsers.add(author);

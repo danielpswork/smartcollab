@@ -40,17 +40,25 @@ public class CardsApi {
         return service.saveCard(card);
     }
     
+    @RequestMapping(method = RequestMethod.POST, value="/comment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Card saveComment(@RequestBody List<String> commentData) {
+        return service.saveComment(commentData);
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/{moderator}")
     @ResponseBody
-    public void setModerator(@PathVariable String id,@PathVariable String moderator) {
+    public Card setModerator(@PathVariable String id,@PathVariable String moderator) {
          Card card = service.getCardById(id);
          card.setModerator(moderator);
          saveCard(card);
+         
+         return card;
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "like/{id}/{login}")
     @ResponseBody
-    public int like(@PathVariable String id,@PathVariable String login) {
+    public Card like(@PathVariable String id,@PathVariable String login) {
          Card card = service.getCardById(id);
          if(card.getLikes().contains(login)) {
              card.getLikes().remove(login);
@@ -59,7 +67,7 @@ public class CardsApi {
          }
          
          saveCard(card);        	 
-         return card.getLikes().size();
+         return card;
     }
     
     

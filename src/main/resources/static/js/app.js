@@ -187,6 +187,16 @@ function openCommentDialog(id) {
 		$('h4#dialogCardTitle').html(card.title);
 		$('p#dialogCardDescription').html(card.description);
 		$('input[name=cardId]').val(card.id);
+		var ul = $('#commentsList');
+		ul.html('');
+		for (var int = 0; int < card.comments.length; int++) {
+			ul.append('<li class="mdl-list__item">');
+			ul.append('<span class="mdl-list__item-primary-content">');
+			ul.append(card.comment[int].author + ' - ' + card.comment[int].creationDate + ':  ');
+			ul.append(card.comment[int].text);
+			ul.append('</span>');
+			ul.append('</li>');
+		}
 	})
 	dialog.showModal();
 }

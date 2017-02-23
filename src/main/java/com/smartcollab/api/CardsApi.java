@@ -33,6 +33,21 @@ public class CardsApi {
     public Card getCardById(@PathVariable String id) {
         return service.getCardById(id);
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/login{login}")
+    @ResponseBody
+    public List<Card> getCardsByLogin(@PathVariable String login) {
+        List<Card> cards =  service.getCards();
+        
+    	for (Card card : cards) {
+    		if(!card.getLogin().equals(login)) {
+    			cards.remove(card);
+    		}
+    	}
+    	
+    	return cards;
+    }
+
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)

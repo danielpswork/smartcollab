@@ -69,6 +69,8 @@ $(document).ready(function() {
     dialog.querySelector('.close').addEventListener('click', function() {
         dialog.close();
     });
+    
+    
 
 })
 
@@ -267,6 +269,31 @@ function convertDateTime(dateTime){
 	dateTime.hour + ':' +
 	dateTime.minute
 }
+
+function loadMyIdeias(){
+	
+    $('#cards').html('');
+
+    $.ajax({
+        url: '/cards/login=' + email.split("@")[0]
+    }).then(function(data) {
+        data.forEach(function(element) {
+            createCard(element.id,
+                element.title,
+                element.login,
+                element.description,
+                element.dateTime,
+                3,
+                element.moderator,
+                element.likes, 
+                null,
+                element.comments);
+        })
+    }).catch(function(err) {
+        console.log('Error: ' + JSON.stringify(err));
+    })
+}
+
 
 function fillComments(data) {
 	$('#commentList').html('');

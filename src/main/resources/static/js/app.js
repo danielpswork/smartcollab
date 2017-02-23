@@ -30,8 +30,7 @@ $(document).ready(function() {
 			title: $('#titleForm').val(),
 			description: $('#descriptionForm').val(),
 			author: login,
-			creationDate: dates[2] + '/' + dates[1] + '/' + dates[0],
-			votedUsers : null
+			creationDate: dates[2] + '/' + dates[1] + '/' + dates[0]
 		}
 		
 		$.ajax({
@@ -76,10 +75,7 @@ function createCards() {
 					element.moderator, element.creationDate, 3, 
 					element.votedUsers.length, element.comments.length);
 		});
-	    $('a[name="moderate"]').click(function(){
-	    	var button = this;
-	    	updateModerator(button, $(this).parents().eq(2)[0].id , login);
-	    });
+		moderateButton();
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
 	})
@@ -139,6 +135,7 @@ function updateNumberOfVoters(id, login){
     	createCard(card.id, card.title, card.author,
     			card.description, card.moderator,
     			card.creationDate, 3, card.votedUsers.length, card.comments.length);
+    	moderateButton();
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
 	});
@@ -149,34 +146,26 @@ function updateModerator(button, id, login){
 	var snackbarContainer = document.querySelector('#demo-toast-example');
 	var card;
 	$.ajax({
-		url: '/cards/' + id
-	}).then(function(data){
-		this.card = data;
-		this.card['moderator'] = login;
-
-		$.ajax({
-			url: '/cards',
-			method: 'POST',
-			data: JSON.stringify(this.card),
-			contentType: "application/json"
-		}).then(function(cardId) {
-			// update card moderator
-			var data = {message: 'Moderador alterado com sucesso!', timeout: 5000};
-		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
-		}).catch(function(err) {
-			var data = {message: 'Erro ao salvar o moderador! ', timeout: 5000};
-		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
-		})
-		
+		url: '/cards/' + id + '/moderator/' + login
+	}).then(function(card){
 		$(button.parentElement.parentElement.parentElement).remove();
-    	createCard(this.card.id, this.card.title, this.card.author,
-    			this.card.description, this.card.moderator,
-    			this.card.creationDate, 3, this.card.votedUsers.length, this.card.comments.lenght);
-
+		createCard(card.id, card.title, card.author,
+    			card.description, card.moderator,
+    			card.creationDate, 3, 
+    			(card.votedUsers ? card.votedUsers.length : 0), 
+    			card.comments.length);
+    	moderateButton();
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
 	});
 	
+}
+
+function moderateButton(){
+	$('a[name="moderate"]').click(function(){
+    	var button = this;
+    	updateModerator(button, $(this).parents().eq(2)[0].id , login);
+    });
 }
 
 function openCommentDialog(id) {

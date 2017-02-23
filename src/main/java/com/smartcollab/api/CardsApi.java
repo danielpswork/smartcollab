@@ -63,4 +63,13 @@ public class CardsApi {
     	service.saveCard(card);
 		return card;
     }
+    
+    @RequestMapping(value="/{id}/moderator/{moderator}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public Card comment(@PathVariable(name="id") String id, @PathVariable(name="moderator") String moderator){
+    	Card card = service.getCardById(id);
+    	card.setModerator(moderator);
+    	service.saveCard(card);
+    	return card;
+    }
 }

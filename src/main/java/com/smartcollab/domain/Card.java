@@ -35,10 +35,13 @@ public class Card implements Serializable {
     }
     
     public void setVotedUsers(String author){
-    	this.votedUsers.add(author);
+    	if(author != "null"){
+        	this.votedUsers.add(author);
+    	}
     }
     
     public void removeVotedUsers(String author){
     	this.votedUsers.remove(author);
     }
+    
 }

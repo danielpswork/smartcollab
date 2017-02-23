@@ -26,4 +26,5 @@ public class CardService {
 	public Card getCardById(String Id) {
 		return repository.findOne(Id);
 	}
+	
 }

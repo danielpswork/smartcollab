@@ -65,6 +65,8 @@ $(document).ready(function() {
 
 function openCommentModal(id){
 	
+	
+	 
 	  var dialogComments = document.querySelector('dialog#insertComments');
 	  var showDialogButtonComments = document.querySelector('.commentButton');
 	    if (!dialogComments.showModal) {
@@ -78,9 +80,11 @@ function openCommentModal(id){
 	    });
 	    
 	    dialogComments.querySelector('.saveCommentButton').addEventListener('click', function() {
-	    	saveComment(id);}
+	    	saveComment(id);
+	    	createCards();}
 	    );
 	    
+	    createComments(id);
 }
 
 /* saveModeratorturns logged user into a moderator */
@@ -128,7 +132,7 @@ function saveComment(pid) {
 		var data = {message: 'Comentário salvo com sucesso!', timeout: 5000};
 	    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 	    $('#commentForm').val("");
-    	createCards();
+	    createComments(pid);
 	}).catch(function(err) {
 		var data = {message: 'Erro ao adicionar comentário: ' + cardJSON.stringify(err), timeout: 5000};
 	    snackbarContainer.MaterialSnackbar.showSnackbar(data);
@@ -222,4 +226,28 @@ function createCard(id, title, login, loginModerator, description, date, likes, 
 	
 	$('#cards').html($('#cards').html() + cardHtml);
 	
+}
+
+/*
+ * createComments retrieves comments for specific card and display them on
+ * screen
+ */
+function createComments(pid) { // TODO corrigir a exibicao do usuario na tela
+	$('#commentsArea').html('');
+	
+	$.ajax({
+		url: '/cards/comments/'+ pid
+	}).then(function(data){
+	data.forEach(function(element) {
+			createComment(element.user, element.comment);
+		})
+	}).catch(function(err){
+		console.log('Error: ' + JSON.stringify(err));
+	})
+}
+
+function createComment(user, comment) {
+	var commentHtml = 'User: ' + user;
+	commentHtml += '<br>Comment: ' + comment + '<br>';
+	$('#commentsArea').html($('#commentsArea').html() + commentHtml);
 }

@@ -1,4 +1,5 @@
 security:
+    allowed-domains: ciandt.com
     oauth2:
         client:
             clientId: 723068959254-f522es0iva0ecd514qcini5932j2a1gr.apps.googleusercontent.com
@@ -9,7 +10,6 @@ security:
             authenticationScheme: query
             clientAuthenticationScheme: form
             scope: profile email
-            hd: ciandt.com
         resource:
             userInfoUri: https://www.googleapis.com/userinfo/v2/me
             preferTokenInfo: false
@@ -24,4 +24,3 @@ spring:
         mongodb:
             uri: mongodb://estagiarios:estagiarios@localhost:27017/estagiarios
             authentication-database: estagiarios
-  

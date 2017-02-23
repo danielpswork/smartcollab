@@ -186,13 +186,13 @@ function createCard(id, title, login, loginModerator, description, date, likes, 
 	
 	var descriptionId = 'description_' + id;
 	
-	var cardHtml = '<div class="mdl-cell mdl-cell--' + size + '-col">';
+	var cardHtml = '<div class=" mdl-cell mdl-cell--' + size + '-col cardElement" >';
 	cardHtml += '		<div class="demo-card-wide mdl-card mdl-shadow--2dp">';
 	cardHtml += '			<div class="mdl-card__title">';
 	cardHtml += '				<h2 class="mdl-card__title-text">' + title + '</h2>';
 	cardHtml += '			</div>';
-	cardHtml += '		<div class="mdl-card__supporting-text">';
-	cardHtml += '			<div id="' + descriptionId + '">' + description.substring(0, 230);
+	cardHtml += '		<div class="mdl-card__supporting-text" style="height:250px">';
+	cardHtml += '			<div class="divCommentText" id="' + descriptionId + '">' + description.substring(0, 230);
 	if (description.length > 230) {
 		cardHtml += '...</div>';
 		cardHtml += '		<div class="mdl-tooltip mdl-tooltip--large" for="' + descriptionId + '">' + description + '</div>';
@@ -200,7 +200,7 @@ function createCard(id, title, login, loginModerator, description, date, likes, 
 		cardHtml += '</div>';
 	}
 	if(!loginModerator || 0 === loginModerator.length){
-		cardHtml += 			'<div style="position: absolute; bottom: 60px;" >';
+		cardHtml += 			'<div class="divCommentText">';
 		cardHtml += 				'Por: ' + login + '<br/>';
 		cardHtml += 				'Data: ' + date;
 		cardHtml += 			'</div>';
@@ -209,17 +209,17 @@ function createCard(id, title, login, loginModerator, description, date, likes, 
 		cardHtml += '			<button onClick="saveModerator(\''+id+'\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect moderarButton">Moderar</button>';
 	}
 	else{
-		cardHtml += 			'<div style="position: absolute; bottom: 60px;" >';
+		cardHtml += 			'<div class="divCommentText">';
 		cardHtml += 				'Por: ' + login + '<br/>';
 		cardHtml += 				'Data: ' + date + '<br/>';
-		cardHtml += 				'Moderador: ' + loginModerator + '<br/>';
+		cardHtml += 				'Moderador: ' + loginModerator + '<br />';
 		cardHtml += 			'</div>';
 		cardHtml += '		</div>';
-		cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
+		cardHtml += '		<div class="mdl-card__actions mdl-card--border divBottomCard">';
 	}
-
-	cardHtml += '		<button onClick="updateCardLike(\''+id+'\')" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect likeButton"><i class="material-icons">thumb_up</i></button> ' + likes.length;
-	cardHtml += '		<button onClick="openCommentModal(\''+id+'\')" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect commentButton"><i class="material-icons">mode_comment</i></button> ' + comments.length;
+	
+	cardHtml += '		<div onClick="openCommentModal(\''+id+'\')" class="material-icons mdl-badge mdl-badge--overlap button-card" data-badge="' + comments.length +'">mode_comment</div>';
+	cardHtml += '		<div onClick="updateCardLike(\''+id+'\')" class="material-icons mdl-badge mdl-badge--overlap button-card" data-badge="' + likes.length +'">thumb_up</div>';	
 	cardHtml += '		</div>';
 	cardHtml += '		<div class="mdl-card__menu">';
 	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
@@ -251,9 +251,21 @@ function createComments(pid) { // TODO corrigir a exibicao do usuario na tela
 	})
 }
 
-function createComment(user, comment, data) {
-	var commentHtml = 'User: ' + user;
-	commentHtml += '<br>Comment: ' + comment;
-	commentHtml += '<br>Data: ' + data + '<br>';
+function createComment(user, comment) {
+	var commentHtml = '<ul class="commentList mdl-list">';
+	commentHtml += '   	<li class="mdl-list__item mdl-list__item--three-line">';
+    commentHtml += '    	<span class="mdl-list__item-primary-content">';
+    commentHtml += '         	<i class="material-icons mdl-list__item-icon">person</i>';
+    commentHtml += '			<span>' + user + '</span>';
+	commentHtml += '			<span class="mdl-list__item-text-body">';
+	commentHtml += '        	' + comment;
+	commentHtml += '			</span>';
+	commentHtml += '		</span>';
+	commentHtml += '		<span class="mdl-list__item-secondary-content mdl-list__item-text-body">';
+	commentHtml += '		' + '2017/09/10';
+	commentHtml += '		</span>';
+    commentHtml += '	</li>';
+	//TODO close tag ul inside createComments() function
+    
 	$('#commentsArea').html($('#commentsArea').html() + commentHtml);
 }

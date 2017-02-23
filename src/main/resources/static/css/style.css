@@ -4,6 +4,48 @@
 	text-align: center;
 }
 
+.modal-comments ul {
+	text-align: left;
+}
+
+.addButton {
+	position: absolute;
+	bottom: 90px;
+	right: 10px;
+	z-index: 10;
+}
+
+.cardDescription {
+	height: 250px;
+}
+
+.divCommentText {
+	padding-bottom: 10%;
+}
+
+.divBottomCard {
+	padding-bottom: 1%;
+}
+
+.divLeftCard {
+	padding-left: 10%;
+}
+
+.button-card {
+	cursor: pointer;
+	float: right;
+}
+
+.commentList {
+	width: 90%;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
 @media screen and (max-width: 480px) {
 	.modal-comments {
 		width: 100%;

@@ -86,7 +86,6 @@ function openCommentModal(id){
 	    dialogComments.querySelector('.saveCommentButton').addEventListener('click', function() {
 	    	saveComment(id);}
 	    );
-	    
 }
 
 /* saveModeratorturns logged user into a moderator */
@@ -257,7 +256,7 @@ function createComment(user, comment, data) {
     commentHtml += '    	<span class="mdl-list__item-primary-content">';
     commentHtml += '         	<i class="material-icons mdl-list__item-icon">person</i>';
     commentHtml += '			<span>' + user + '</span>';
-	commentHtml += '			<span class="mdl-list__item-text-body">';
+	commentHtml += '			<span class="mdl-list__item-text-body textComment">';
 	commentHtml += '        	' + comment;
 	commentHtml += '			</span>';
 	commentHtml += '		</span>';

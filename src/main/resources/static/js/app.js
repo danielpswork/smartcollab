@@ -113,8 +113,8 @@ function createCard(id, title, login, description, moderator, date, size, votedU
 	if(!moderator) {
 		cardHtml += '			<a name="moderate" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar</a>';
 	}
-	cardHtml += '			<a onclick="updateNumberOfVoters(\''+ id +'\',\'' + login +'\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">' + votedUsersNumber + '<i class="material-icons">thumb_up</i></a>';
-	cardHtml += '			<a onclick="openCommentDialog(\'' + id + '\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">'+ commentsNumber + '<i class="material-icons">comment</i></a>';
+	cardHtml += '			<a onclick="updateNumberOfVoters(\''+ id +'\',\'' + login +'\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">' + votedUsersNumber + '  <i class="material-icons">thumb_up</i></a>';
+	cardHtml += '			<a onclick="openCommentDialog(\'' + id + '\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">'+ commentsNumber + '  <i class="material-icons">comment</i></a>';
 	cardHtml += '		</div>';
 	cardHtml += '		<div class="mdl-card__menu">';
 	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
@@ -181,7 +181,7 @@ function openCommentDialog(id) {
 		for (var int = 0; int < card.comments.length; int++) {
 			ul.append('<li class="mdl-list__item">');
 			ul.append('<span class="mdl-list__item-primary-content">');
-			ul.append(card.comment[int].author + ' - ' + card.comment[int].creationDate + ':  ');
+			ul.append('<i class="material-icons">account_circle</i><strong>' + card.comment[int].author + '</strong> em ' + card.comment[int].creationDate + ' disse<br />');
 			ul.append(card.comment[int].text);
 			ul.append('</span>');
 			ul.append('</li>');

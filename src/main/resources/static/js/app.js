@@ -67,7 +67,6 @@ $(document).ready(function() {
 
 function openCommentModal(id){
 	
-	
 	 
 	  var dialogComments = document.querySelector('dialog#insertComments');
 	  var showDialogButtonComments = document.querySelector('.commentButton');
@@ -77,6 +76,7 @@ function openCommentModal(id){
 	    }
 	    
 	    dialogComments.showModal();
+	    
 	    createComments(id);
 	    	    
 	    dialogComments.querySelector('.close').addEventListener('click', function() {
@@ -241,10 +241,21 @@ function createComments(pid) { // TODO corrigir a exibicao do usuario na tela
 	$.ajax({
 		url: '/cards/comments/'+ pid
 	}).then(function(data){
+		searchCardById(pid);
 	data.forEach(function(element) {
 		var dataString = element.dateNow.dayOfMonth + '/' + element.dateNow.monthValue  + '/' + element.dateNow.year;
 			createComment(element.user, element.comment, dataString);
 		})
+	}).catch(function(err){
+		console.log('Error: ' + JSON.stringify(err));
+	})
+}
+
+function searchCardById(pid){
+	$.ajax({
+		url: '/cards/cardById/'+ pid
+	}).then(function(element){
+		displayCardDescription(element.title, element.description);
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
 	})
@@ -264,7 +275,14 @@ function createComment(user, comment, data) {
 	commentHtml += '		' + data;
 	commentHtml += '		</span>';
     commentHtml += '	</li>';
-	//TODO close tag ul inside createComments() function
+	// TODO close tag ul inside createComments() function
     
 	$('#commentsArea').html($('#commentsArea').html() + commentHtml);
+}
+
+
+function displayCardDescription(title, description) {
+	var commentHtml = '<span>' + title + '</span><br />'; 
+	commentHtml +='<span>' + description + '</span>'; 
+	$('#cardDescriptionArea').html($('#cardDescriptionArea').html() + commentHtml);
 }

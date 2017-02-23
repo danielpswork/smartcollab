@@ -34,6 +34,12 @@ public class CardsApi {
 	public List<Comment> getComments(@PathVariable(name = "id") String id) {
 		return service.getCardById(id).getCardComments();
 	}
+	
+	@RequestMapping(path = "/cardById/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public Card getCardById(@PathVariable(name = "id") String id) {
+		return service.getCardById(id);
+	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)

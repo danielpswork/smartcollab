@@ -1,4 +1,5 @@
 security:
+    allowed-domains: ciandt.com
     oauth2:
         client:
             clientId: 1075756127724-sf91qa0328t0sapivrpkg982lg758j62.apps.googleusercontent.com

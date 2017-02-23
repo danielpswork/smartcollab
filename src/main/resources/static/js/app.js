@@ -214,16 +214,17 @@ function saveComment() {
 		method: 'POST',
 		data: JSON.stringify(comment),
 		contentType: "application/json"
-	}).then(function(cardId) {
-		// update card moderator
+	}).then(function(card) {
+		$('#commentForm').html('');
 		var data = {message: 'Moderador alterado com sucesso!', timeout: 5000};
+		openCommentDialog(card.id);
 	}).catch(function(err) {
 		var data = {message: 'Erro ao salvar o moderador! ', timeout: 5000};
 	})
-	
 }
 
 function closeCommentDialog() {
 	dialog = document.querySelector('dialog#commentDialog');
 	dialog.close();
+	createCards();
 }

@@ -27,8 +27,8 @@ public class SmartCollabApplication {
 	    return new AuthoritiesExtractor() {
 	        @Override
 	        public List<GrantedAuthority> extractAuthorities(final Map<String, Object> map) {
-	            if (map != null && map.containsKey("hd")) {
-	                final String domain = map.get("hd").toString();
+	            if (map != null && map.containsKey("email")) {
+	                final String domain = (String) map.get("email").toString().split("@")[1];
 	                if (!allowedDomains.contains(domain)) {
 	                    throw new BadCredentialsException("Not an allowed domain");
 	                }

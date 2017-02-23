@@ -44,6 +44,8 @@ $(document).ready(function() {
 			$('#descriptionForm').val('');
 			var data = {message: 'Card salvo com sucesso!', timeout: 5000};
 		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+		    dialog = document.querySelector('dialog#insertDialog');
+			dialog.close();
 		}).catch(function(err) {
 			var data = {message: 'Erro ao salvar o card: ' + cardJSON.stringify(err), timeout: 5000};
 		    snackbarContainer.MaterialSnackbar.showSnackbar(data);

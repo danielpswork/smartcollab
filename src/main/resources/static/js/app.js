@@ -77,6 +77,7 @@ function openCommentModal(id){
 	    }
 	    
 	    dialogComments.showModal();
+	    createComments(id);
 	    	    
 	    dialogComments.querySelector('.close').addEventListener('click', function() {
 	    	dialogComments.close();
@@ -86,7 +87,6 @@ function openCommentModal(id){
 	    	saveComment(id);}
 	    );
 	    
-	    createComments(id);
 }
 
 /* saveModeratorturns logged user into a moderator */
@@ -251,7 +251,7 @@ function createComments(pid) { // TODO corrigir a exibicao do usuario na tela
 	})
 }
 
-function createComment(user, comment) {
+function createComment(user, comment, data) {
 	var commentHtml = '<ul class="commentList mdl-list">';
 	commentHtml += '   	<li class="mdl-list__item mdl-list__item--three-line">';
     commentHtml += '    	<span class="mdl-list__item-primary-content">';
@@ -262,7 +262,7 @@ function createComment(user, comment) {
 	commentHtml += '			</span>';
 	commentHtml += '		</span>';
 	commentHtml += '		<span class="mdl-list__item-secondary-content mdl-list__item-text-body">';
-	commentHtml += '		' + '2017/09/10';
+	commentHtml += '		' + data;
 	commentHtml += '		</span>';
     commentHtml += '	</li>';
 	//TODO close tag ul inside createComments() function

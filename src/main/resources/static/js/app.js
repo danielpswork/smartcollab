@@ -72,7 +72,9 @@ function createCards() {
 		url: '/cards'
 	}).then(function(data){
 		data.forEach(function(element) {
-			createCard(element.id, element.title, element.author, element.description, element.moderator, element.creationDate, 3, element.votedUsers.length);
+			createCard(element.id, element.title, element.author, element.description, 
+					element.moderator, element.creationDate, 3, 
+					element.votedUsers.length, element.comments.length);
 		});
 	    $('a[name="moderate"]').click(function(){
 	    	var button = this;
@@ -83,7 +85,7 @@ function createCards() {
 	})
 }
 
-function createCard(id, title, login, description, moderator, date, size, votedUsersNumber) {
+function createCard(id, title, login, description, moderator, date, size, votedUsersNumber, commentsNumber) {
 	
 	var descriptionId = 'description_' + id;
 	
@@ -116,7 +118,7 @@ function createCard(id, title, login, description, moderator, date, size, votedU
 		cardHtml += '			<a name="moderate" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar</a>';
 	}
 	cardHtml += '			<a onclick="updateNumberOfVoters(\''+ id +'\',\'' + login +'\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">' + votedUsersNumber + '<i class="material-icons">thumb_up</i></a>';
-	cardHtml += '			<a onclick="openCommentDialog(\'' + id + '\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">0<i class="material-icons">comment</i></a>';
+	cardHtml += '			<a onclick="openCommentDialog(\'' + id + '\')" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">'+ commentsNumber + '<i class="material-icons">comment</i></a>';
 	cardHtml += '		</div>';
 	cardHtml += '		<div class="mdl-card__menu">';
 	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
@@ -136,7 +138,7 @@ function updateNumberOfVoters(id, login){
 		$("#"+card.id).remove();
     	createCard(card.id, card.title, card.author,
     			card.description, card.moderator,
-    			card.creationDate, 3, card.votedUsers.length);
+    			card.creationDate, 3, card.votedUsers.length, card.comments.length);
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
 	});
@@ -169,7 +171,7 @@ function updateModerator(button, id, login){
 		$(button.parentElement.parentElement.parentElement).remove();
     	createCard(this.card.id, this.card.title, this.card.author,
     			this.card.description, this.card.moderator,
-    			this.card.creationDate, 3, this.card.votedUsers.length);
+    			this.card.creationDate, 3, this.card.votedUsers.length, this.card.comments.lenght);
 
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));

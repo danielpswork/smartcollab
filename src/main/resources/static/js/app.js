@@ -1,8 +1,8 @@
 var email;
 var currCard;
 
-function convertDateTime(dateTime) {
-    return dateTime.dayOfMonth + "/" + dateTime.monthValue + "/" + dateTime.year;
+function convertDate(date) {
+    return date.dayOfMonth + "/" + date.monthValue + "/" + date.year;
 }
 
 
@@ -87,18 +87,20 @@ function createCards() {
                 element.dateTime,
                 3,
                 element.moderator,
-                element.likes);
+                element.likes, 
+                null,
+                element.comments);
         })
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
 }
 
-function createCard(id, title, login, description, date, size, moderator, likes, local) {
+function createCard(id, title, login, description, date, size, moderator, likes, local, comments) {
 
     var descriptionId = 'description_' + id;
 
-    date = convertDateTime(date);
+    date = convertDate(date);
 
 
     var cardHtml = '<div id="card' + id + '">';
@@ -125,10 +127,11 @@ function createCard(id, title, login, description, date, size, moderator, likes,
     cardHtml += '				<button  onclick="like(&quot;' + id + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">';
     cardHtml += '	  				<i class="material-icons md-light">thumb_up</i>';
     cardHtml += '				</button>';
-    cardHtml += '				' + (likes == null ? 0 : likes.length);
-    cardHtml += '				<button style="float:right" onclick="comment(&quot;' + id + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">';
-    cardHtml += '	  				<i class="material-icons md-light">comment</i>';
+    cardHtml += '				<span style="top: 10px; right: 2px" class="mdl-badge" data-badge="' + + (likes == null ? 0 : likes.length)  +  '"></span>';
+    cardHtml += '				<button style="left:165px;" onclick="comment(&quot;' + id + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">';
+    cardHtml += '	  				<i class="material-icons">comment</i>';
     cardHtml += '				</button>';
+    cardHtml += ' <span style="float:right; top: 15px; right: 2px" class="mdl-badge" data-badge="' + + (comments == null ? 0 : comments.length)  +  '"></span>';
     cardHtml += '		</div>';
     if (moderator == null) {
         cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
@@ -168,7 +171,8 @@ function beModerator(id) {
             3,
             data.moderator,
             data.likes,
-            id);
+            id,
+            data.comments);
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
@@ -206,7 +210,7 @@ function comment(id) {
         method: 'GET',
         contentType: "application/json"
     }).then(function(data) {
-            fillComments(data);
+            fillComments(data); 
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
@@ -231,10 +235,37 @@ function saveComment() {
         data: JSON.stringify(data),
         contentType: "application/json"
     }).then(function(data) {
-        fillComments(data);
+    	
+
+        $('#card' + data.id).html('');
+    	createCard(data.id,
+                data.title,
+                data.login,
+                data.description,
+                data.dateTime,
+                3,
+                data.moderator,
+                data.likes,
+                data.id,
+                data.comments);
+    	
+    	fillComments(data);
+
+        $('#textFieldComment')[0].value = "";
+        $('#textFieldComment')[0].focus();
+        
+        
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
+}
+
+function convertDateTime(dateTime){
+	return ' - '+ dateTime.dayOfMonth + '/' +
+	dateTime.monthValue + '/' +
+	dateTime.year + ' - ' + 
+	dateTime.hour + ':' +
+	dateTime.minute
 }
 
 function fillComments(data) {
@@ -243,7 +274,8 @@ function fillComments(data) {
     		var html = '<li class="mdl-list__item mdl-list__item--three-line">';
     	    html += '<span class="mdl-list__item-primary-content">';
     	    html += '<i class="material-icons mdl-list__item-avatar">person</i>';
-    	    html += '<span>'+ data.comments[i].login +'</span>';
+    	    html += '<span style="font-weight: bold">'+ data.comments[i].login  +'</span>';
+    	    html += '<span >'+ convertDateTime(data.comments[i].dateTime) +'</span>';
     	    html += '<span class="mdl-list__item-text-body">';
     	    html += data.comments[i].text;
     	    html += '</span>';

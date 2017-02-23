@@ -9,6 +9,7 @@ security:
             authenticationScheme: query
             clientAuthenticationScheme: form
             scope: profile email
+            hd: ciandt.com
         resource:
             userInfoUri: https://www.googleapis.com/userinfo/v2/me
             preferTokenInfo: false

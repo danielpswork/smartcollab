@@ -2,8 +2,6 @@ package com.smartcollab.domain;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.Data;
 
 @Data

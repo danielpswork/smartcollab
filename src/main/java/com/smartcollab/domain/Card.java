@@ -29,8 +29,6 @@ public class Card implements Serializable {
 	private Set<String> userLikes = new HashSet<String>();
 	private List<Comment> cardComments = new ArrayList<Comment>();
 	@Transient
-	private String displayDateNow = dateNow.toString(); // dateFormat
-	@Transient
 	private String loggedUser;
 	@Transient
 	private String comment;

@@ -24,6 +24,18 @@ $(document).ready(function() {
 		console.log(err);
 	})
 	
+	var dialog = document.querySelector('dialog#insertDialog');
+    var showDialogButton = document.querySelector('#show-dialog');
+    if (! dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+    }
+    showDialogButton.addEventListener('click', function() {
+      dialog.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function() {
+      dialog.close();
+    });
+    
 	/* Save new card */
 	$('#saveFormButton').click(function() {
 		var data = {
@@ -43,23 +55,13 @@ $(document).ready(function() {
 			$('#descriptionForm').val('');
 			var data = {message: 'Card salvo com sucesso!', timeout: 5000};
 		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+		    dialog.close();
 		}).catch(function(err) {
 			var data = {message: 'Erro ao salvar o card: ' + cardJSON.stringify(err), timeout: 5000};
 		    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 		})
 	})
 	
-	var dialog = document.querySelector('dialog#insertDialog');
-    var showDialogButton = document.querySelector('#show-dialog');
-    if (! dialog.showModal) {
-      dialogPolyfill.registerDialog(dialog);
-    }
-    showDialogButton.addEventListener('click', function() {
-      dialog.showModal();
-    });
-    dialog.querySelector('.close').addEventListener('click', function() {
-      dialog.close();
-    });
 	
 })
 
@@ -69,19 +71,19 @@ function openCommentModal(id){
 	 
 	  var dialogComments = document.querySelector('dialog#insertComments');
 	  var showDialogButtonComments = document.querySelector('.commentButton');
+	    
 	    if (!dialogComments.showModal) {
 	      dialogPolyfill.registerDialog(dialogComments);
 	    }
-    
-	    dialogComments.showModal();
 	    
+	    dialogComments.showModal();
+	    	    
 	    dialogComments.querySelector('.close').addEventListener('click', function() {
 	    	dialogComments.close();
 	    });
 	    
 	    dialogComments.querySelector('.saveCommentButton').addEventListener('click', function() {
-	    	saveComment(id);
-	    	createCards();}
+	    	saveComment(id);}
 	    );
 	    
 	    createComments(id);
@@ -129,6 +131,7 @@ function saveComment(pid) {
 		data: JSON.stringify(data),
 		contentType: "application/json"
 	}).then(function(cardId) {
+		createCards();
 		var data = {message: 'Comentário salvo com sucesso!', timeout: 5000};
 	    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 	    $('#commentForm').val("");
@@ -170,7 +173,8 @@ function createCards() {
 		url: '/cards'
 	}).then(function(data){
 	data.forEach(function(element) {
-			createCard(element.id, element.title, element.loginCreator, element.loginModerator, element.description, element.displayDateNow, element.userLikes, element.cardComments, 3);
+		var dataString = element.dateNow.dayOfMonth + '/' + element.dateNow.monthValue  + '/' + element.dateNow.year;
+			createCard(element.id, element.title, element.loginCreator, element.loginModerator, element.description, dataString, element.userLikes, element.cardComments, 3);
 		})
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
@@ -239,15 +243,17 @@ function createComments(pid) { // TODO corrigir a exibicao do usuario na tela
 		url: '/cards/comments/'+ pid
 	}).then(function(data){
 	data.forEach(function(element) {
-			createComment(element.user, element.comment);
+		var dataString = element.dateNow.dayOfMonth + '/' + element.dateNow.monthValue  + '/' + element.dateNow.year;
+			createComment(element.user, element.comment, dataString);
 		})
 	}).catch(function(err){
 		console.log('Error: ' + JSON.stringify(err));
 	})
 }
 
-function createComment(user, comment) {
+function createComment(user, comment, data) {
 	var commentHtml = 'User: ' + user;
-	commentHtml += '<br>Comment: ' + comment + '<br>';
+	commentHtml += '<br>Comment: ' + comment;
+	commentHtml += '<br>Data: ' + data + '<br>';
 	$('#commentsArea').html($('#commentsArea').html() + commentHtml);
 }

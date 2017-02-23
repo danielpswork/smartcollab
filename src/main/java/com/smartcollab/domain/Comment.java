@@ -1,6 +1,7 @@
 package com.smartcollab.domain;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,6 +15,7 @@ public class Comment implements Serializable {
 
 	private String user;
 	private String comment;
+	private LocalDate dateNow = LocalDate.now();
 
 	public Comment() {
 

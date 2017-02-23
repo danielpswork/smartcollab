@@ -98,7 +98,7 @@ function createCard(id, title, login, description, moderator, date, size, votedU
 	} else {
 		cardHtml += '</div>';
 	}
-	cardHtml += 			'<div style="position: absolute; bottom: 60px;" >';
+	cardHtml += 			'<div style="position: relative; top: 80px;" >';
 	cardHtml += 				'Por: ' + login + '<br/>';
 	cardHtml += 				'Data: ' + date + '<br/>';
 	if(moderator!=null) {

@@ -325,7 +325,7 @@ function loadMyIdeias() {
     $('#cards').html('');
 
     $.ajax({
-        url: '/cards/login=' + email.split("@")[0]
+        url: '/cards/login' + email.split("@")[0]
     }).then(function(data) {
         data.forEach(function(element) {
             createCard(element.id,

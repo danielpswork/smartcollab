@@ -60,13 +60,13 @@ $(document).ready(function() {
             $('#descriptionForm').val('');
             var data = {
                 message: 'Card salvo com sucesso!',
-                timeout: 5000
+                timeout: 2000
             };
             snackbarContainer.MaterialSnackbar.showSnackbar(data);
         }).catch(function(err) {
             var data = {
                 message: 'Erro ao salvar o card: ' + cardJSON.stringify(err),
-                timeout: 5000
+                timeout: 2000
             };
             snackbarContainer.MaterialSnackbar.showSnackbar(data);
         })
@@ -344,11 +344,26 @@ function loadMyIdeias() {
 }
 
 function deleteCard(id){
+	var snackbarContainer = document.querySelector('#demo-toast-example');
+	
 	$.ajax({
         url: '/cards/delete/' + id + '/' + email.split("@")[0],
         type: 'DELETE'
     }).then(function(data) {
-    	createCards();
+    	if(data === true){
+        	snackbar = {
+                    message: "Card removido com sucesso!",
+                    timeout: 2000
+        	};
+        	snackbarContainer.MaterialSnackbar.showSnackbar(snackbar);
+        	createCards();
+    	}else{
+    		snackbar = {
+                    message: "Card de outro usuário não pode ser removido!",
+                    timeout: 2000
+        	};
+        	snackbarContainer.MaterialSnackbar.showSnackbar(snackbar);
+    	}
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })

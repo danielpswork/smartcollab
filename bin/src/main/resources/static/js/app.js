@@ -1,6 +1,5 @@
 var email;
 var currCard;
-var avatarUrl;
 
 function convertDate(date) {
     return date.dayOfMonth + "/" + date.monthValue + "/" + date.year;
@@ -35,8 +34,6 @@ $(document).ready(function() {
         $('.container').hide()
         $('#userName').html(data.userAuthentication.details.name);
         $('#userImage').attr("src", data.userAuthentication.details.picture);
-        
-        avatarUrl = data.userAuthentication.details.picture;
         email = data.userAuthentication.details.email;
 
         createCards();

@@ -27,8 +27,8 @@ public class CardService {
 
     public String saveCard(Card newCard) {
 
-    	if(newCard.getId()==null) {
-        	newCard.setDateTime(LocalDate.now());
+    	if(newCard.getId() == null) {
+        	newCard.setDateTime(LocalDateTime.now());
     	}
         Card card = repository.save(newCard);
         return card.getId();

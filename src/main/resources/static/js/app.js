@@ -6,11 +6,18 @@ function convertDate(date) {
 }
 
 function convertDateTime(dateTime) {
+	if (dateTime.minute < 10)
     return ' - ' + dateTime.dayOfMonth + '/' +
         dateTime.monthValue + '/' +
         dateTime.year + ' - ' +
         dateTime.hour + ':' +
-        dateTime.minute
+        '0' + dateTime.minute;
+	else
+		return ' - ' + dateTime.dayOfMonth + '/' +
+        dateTime.monthValue + '/' +
+        dateTime.year + ' - ' +
+        dateTime.hour + ':' +
+        dateTime.minute;
 }
 
 $(document).ready(function() {
@@ -82,7 +89,7 @@ $(document).ready(function() {
 function createCards() {
 
     $('#cards').html('');
-
+    dialog = document.querySelector('dialog#insertDialog');
     $.ajax({
         url: '/cards'
     }).then(function(data) {
@@ -100,6 +107,8 @@ function createCards() {
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
+    
+    dialog.close();
 }
 
 function createCard(id, title, login, description, date, moderator, likes, comments, local) {
@@ -116,20 +125,18 @@ function createCard(id, title, login, description, date, moderator, likes, comme
     cardHtml += '			<div class="mdl-card__title">';
     cardHtml += '				<h2 class="mdl-card__title-text">' + title + '</h2>';
     cardHtml += '			</div>';
+    cardHtml += '		<div id="cardInfo">';
+    cardHtml += '			<i class="material-icons mdl-list__item-avatar">person</i>  ' + login + ' em ' + date + '<br/>';
+    cardHtml += '		</div>';
     cardHtml += '		<div class="mdl-card__supporting-text">';
-    cardHtml += '			<div id="' + descriptionId + '">' + description.substring(0, 230);
+    cardHtml += '			<div id="' + descriptionId + '">' + description.substring(0, 160);
 
-    if (description.length > 230) {
+    if (description.length > 160) {
         cardHtml += '...</div>';
         cardHtml += '		<div class="mdl-tooltip mdl-tooltip--large" for="' + descriptionId + '">' + description + '</div>';
     } else {
         cardHtml += '</div>';
     }
-    cardHtml += '<div style="position: absolute; bottom: 120px;" >';
-    cardHtml += '	Por: ' + login + '<br/>';
-    cardHtml += '	Data: ' + date + '<br/>';
-    cardHtml += '	Moderador: ' + (moderator == null ? "Não definido" : moderator);
-    cardHtml += '</div>';
     cardHtml += '		</div>'
     cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
     cardHtml += '				<button  onclick="like(&quot;' + id + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">';
@@ -144,6 +151,10 @@ function createCard(id, title, login, description, date, moderator, likes, comme
     if (moderator == null) {
         cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
         cardHtml += '			<a onclick="beModerator(&quot;' + id + '&quot;)" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar </a>';
+        cardHtml += '		</div>';
+    } else {
+        cardHtml += '		<div class="mdl-card__actions mdl-card--border moderator">';
+        cardHtml += '			Moderado por ' + (moderator == null ? "ninguém" : moderator);
         cardHtml += '		</div>';
     }
     cardHtml += '		<div class="mdl-card__menu">';
@@ -210,6 +221,7 @@ function like(id) {
 function comment(id) {
     document.querySelector('#commentDialog').showModal();
     $('#textFieldComment')[0].focus();
+    $('#commentModal').html('');
     currCard = id;
 
     $.ajax({
@@ -217,7 +229,20 @@ function comment(id) {
         method: 'GET',
         contentType: "application/json"
     }).then(function(data) {
-        fillComments(data);
+    	
+    	var html = '<h2>' + data.title + '</h2>';
+    	html += '<p>Criado por: ' + data.login + ' ' + convertDateTime(data.dateTime);
+    	if (data.moderator != null) {
+    		html += ' Moderador: ' + data.moderator;
+    	}
+    	html += '</p>';
+        html += '<p>' + data.description + '</p>';
+        html += '<ul id="commentList" class="demo-list-three mdl-list">'
+        html += fillComments(data);
+        html += '</ul>';
+
+        $('#commentModal').html($('#commentModal').html() + html);
+        
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
@@ -225,6 +250,8 @@ function comment(id) {
 }
 
 function saveComment() {
+	$('#commentModal').html('');
+	
     var data = [currCard,
         email.split("@")[0],
         $('#textFieldComment')[0].value
@@ -249,11 +276,21 @@ function saveComment() {
             data.comments,
             data.id);
 
-        fillComments(data);
+        var html = '<h2>' + data.title + '</h2>';
+    	html += '<p>Criado por: ' + data.login + ' ' + convertDateTime(data.dateTime);
+    	if (data.moderator != null) {
+    		html += ' Moderador: ' + data.moderator;
+    	}
+    	html += '</p>';
+        html += '<p>' + data.description + '</p>';
+        html += '<ul id="commentList" class="demo-list-three mdl-list">'
+        html += fillComments(data);
+        html += '</ul>';
 
+        $('#commentModal').html($('#commentModal').html() + html);
+        
         $('#textFieldComment')[0].value = "";
         $('#textFieldComment')[0].focus();
-
 
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
@@ -261,21 +298,20 @@ function saveComment() {
 }
 
 function fillComments(data) {
-    $('#commentList').html('');
-    for (var i = data.comments.length - 1; i >= 0; i--) {
-        var html = '<li class="mdl-list__item mdl-list__item--three-line">';
-        html += '<span class="mdl-list__item-primary-content">';
+	var html = '';
+    for (var i =  0; i < data.comments.length; i++) {
+        html += '<li class="mdl-list__item mdl-list__item--three-line" style="height:auto;">';
+        html += '<span class="mdl-list__item-primary-content" style="height:auto;">';
         html += '<i class="material-icons mdl-list__item-avatar">person</i>';
         html += '<span style="font-weight: bold">' + data.comments[i].login + '</span>';
         html += '<span >' + convertDateTime(data.comments[i].dateTime) + '</span>';
-        html += '<span class="mdl-list__item-text-body">';
+        html += '<span class="mdl-list__item-text-body" style="height:auto;">';
         html += data.comments[i].text;
         html += '</span>';
         html += '</span>';
         html += '</li>';
-
-        $('#commentList').html($('#commentList').html() + html);
     }
+    return html;
 }
 
 function closeCommentDialog() {

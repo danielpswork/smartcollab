@@ -25,7 +25,13 @@ public class CardsApi {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<Card> getCards() {
-        return service.getCards();
+        return service.getCardsOrderedByLikes();
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/bydate")
+    @ResponseBody
+    public List<Card> getCardsOrderedByDate() {
+        return service.getCardsOrderedByDate();
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
@@ -37,7 +43,7 @@ public class CardsApi {
     @RequestMapping(method = RequestMethod.GET, value = "/login{login}")
     @ResponseBody
     public List<Card> getCardsByLogin(@PathVariable String login) {
-        List<Card> cards =  service.getCards();
+        List<Card> cards =  service.getCardsOrderedByLikes();
         
     	for (Card card : cards) {
     		if(!card.getLogin().equals(login)) {

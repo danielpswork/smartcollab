@@ -2,6 +2,7 @@ package com.smartcollab.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.smartcollab.domain.Card;
 import com.smartcollab.domain.Comment;
 import com.smartcollab.repository.CardsRepository;
+import com.smartcollab.utils.DateComparator;
+import com.smartcollab.utils.LikesComparator;
 
 @Service
 public class CardService {
@@ -17,8 +20,18 @@ public class CardService {
     @Autowired
     private CardsRepository repository;
 
-    public List<Card> getCards() {
-        return repository.findAll();
+    public List<Card> getCardsOrderedByLikes() {
+        List<Card> temp = repository.findAll();
+        Collections.sort(temp,new LikesComparator());
+    	
+    	return temp;
+    }
+    
+    public List<Card> getCardsOrderedByDate() {
+        List<Card> temp = repository.findAll();
+        Collections.sort(temp,new DateComparator());
+    	
+    	return temp;
     }
     
     public Card getCardById (String id) {

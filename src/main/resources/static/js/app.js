@@ -296,12 +296,12 @@ function saveComment() {
 function fillComments(data) {
 	var html = '';
     for (var i =  0; i < data.comments.length; i++) {
-        html += '<li class="mdl-list__item mdl-list__item--three-line">';
-        html += '<span class="mdl-list__item-primary-content">';
+        html += '<li class="mdl-list__item mdl-list__item--three-line" style="height:auto;">';
+        html += '<span class="mdl-list__item-primary-content" style="height:auto;">';
         html += '<i class="material-icons mdl-list__item-avatar">person</i>';
         html += '<span style="font-weight: bold">' + data.comments[i].login + '</span>';
         html += '<span >' + convertDateTime(data.comments[i].dateTime) + '</span>';
-        html += '<span class="mdl-list__item-text-body">';
+        html += '<span class="mdl-list__item-text-body" style="height:auto;">';
         html += data.comments[i].text;
         html += '</span>';
         html += '</span>';

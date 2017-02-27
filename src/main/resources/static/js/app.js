@@ -71,7 +71,7 @@ $(document).ready(function() {
             snackbarContainer.MaterialSnackbar.showSnackbar(data);
         })
     })
-
+    
     var dialog = document.querySelector('dialog#insertDialog');
     var showDialogButton = document.querySelector('#show-dialog');
     if (!dialog.showModal) {
@@ -114,6 +114,7 @@ function createCards() {
 function createCard(id, title, login, description, date, moderator, likes, comments, local) {
 
     var descriptionId = 'description_' + id;
+    var currUserLogin = email.split("@")[0];
 
     date = convertDate(date);
 
@@ -158,6 +159,11 @@ function createCard(id, title, login, description, date, moderator, likes, comme
         cardHtml += '		</div>';
     }
     cardHtml += '		<div class="mdl-card__menu">';
+    if (currUserLogin == login) {
+    	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
+    	cardHtml += '				<i class="material-icons" onClick="editCard(&quot;' + id + '&quot;)">edit</i>';
+    	cardHtml += '			</button>';
+    }
     cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
     cardHtml += '				<i class="material-icons" onclick="deleteCard(&quot;' + id + '&quot;)">close</i>';
     cardHtml += '			</button>';
@@ -320,6 +326,10 @@ function closeCommentDialog() {
     document.querySelector('#commentDialog').close();
 }
 
+function closeEditionDialog() {
+    document.querySelector('#editDialog').close();
+}
+
 function loadMyIdeias() {
 
     $('#cards').html('');
@@ -368,3 +378,23 @@ function deleteCard(id){
         console.log('Error: ' + JSON.stringify(err));
     })
 }
+
+function editCard(id) {
+	document.querySelector('#editDialog').showModal();
+    
+    $.ajax({
+        url: '/cards/' + id,
+        method: 'GET',
+        contentType: "application/json"
+    }).then(function(data) {
+        $('#titleFormEdit').val(data.title);
+        $('#descriptionFormEdit').val(data.description);
+    }).catch(function(err) {
+        console.log('Error: ' + JSON.stringify(err));
+    })
+
+}
+
+function saveModifiedCard() {
+}
+

@@ -60,6 +60,7 @@ public class CardService {
     	temp = repository.findOne(cardId);
     	aux.setLogin(data.get(1));
     	aux.setText(data.get(2));
+    	aux.setAvatarUrl(data.get(3));
     	aux.setDateTime(LocalDateTime.now());
     	
     	temp.getComments().add(aux);

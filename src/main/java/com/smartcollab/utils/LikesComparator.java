@@ -9,9 +9,9 @@ public class LikesComparator implements Comparator<Card> {
 	
 	public int compare(Card a, Card b) {
         if (a.getLikes().size() < b.getLikes().size()){
-        	return -1;
-        } else if (a.getLikes().size() > b.getLikes().size()){
         	return 1;
+        } else if (a.getLikes().size() > b.getLikes().size()){
+        	return -1;
         } else
         	return 0;
     }

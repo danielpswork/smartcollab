@@ -6,11 +6,18 @@ function convertDate(date) {
 }
 
 function convertDateTime(dateTime) {
+	if (dateTime.minute < 10)
     return ' - ' + dateTime.dayOfMonth + '/' +
         dateTime.monthValue + '/' +
         dateTime.year + ' - ' +
         dateTime.hour + ':' +
-        dateTime.minute
+        '0' + dateTime.minute;
+	else
+		return ' - ' + dateTime.dayOfMonth + '/' +
+        dateTime.monthValue + '/' +
+        dateTime.year + ' - ' +
+        dateTime.hour + ':' +
+        dateTime.minute;
 }
 
 $(document).ready(function() {
@@ -210,6 +217,7 @@ function like(id) {
 function comment(id) {
     document.querySelector('#commentDialog').showModal();
     $('#textFieldComment')[0].focus();
+    $('#commentModal').html('');
     currCard = id;
 
     $.ajax({
@@ -217,7 +225,20 @@ function comment(id) {
         method: 'GET',
         contentType: "application/json"
     }).then(function(data) {
-        fillComments(data);
+    	
+    	var html = '<h2>' + data.title + '</h2>';
+    	html += '<p>Criado por: ' + data.login + ' ' + convertDateTime(data.dateTime);
+    	if (data.moderator != null) {
+    		html += ' Moderador: ' + data.moderator;
+    	}
+    	html += '</p>';
+        html += '<p>' + data.description + '</p>';
+        html += '<ul id="commentList" class="demo-list-three mdl-list">'
+        html += fillComments(data);
+        html += '</ul>';
+
+        $('#commentModal').html($('#commentModal').html() + html);
+        
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
@@ -225,6 +246,8 @@ function comment(id) {
 }
 
 function saveComment() {
+	$('#commentModal').html('');
+	
     var data = [currCard,
         email.split("@")[0],
         $('#textFieldComment')[0].value
@@ -249,11 +272,16 @@ function saveComment() {
             data.comments,
             data.id);
 
-        fillComments(data);
+        var html = '<h2>' + data.title + '</h2>';
+        html += '<p>' + data.description + '</p>';
+        html += '<ul id="commentList" class="demo-list-three mdl-list">'
+        html += fillComments(data);
+        html += '</ul>';
 
+        $('#commentModal').html($('#commentModal').html() + html);
+        
         $('#textFieldComment')[0].value = "";
         $('#textFieldComment')[0].focus();
-
 
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
@@ -261,9 +289,9 @@ function saveComment() {
 }
 
 function fillComments(data) {
-    $('#commentList').html('');
-    for (var i = data.comments.length - 1; i >= 0; i--) {
-        var html = '<li class="mdl-list__item mdl-list__item--three-line">';
+	var html = '';
+    for (var i =  0; i < data.comments.length; i++) {
+        html += '<li class="mdl-list__item mdl-list__item--three-line">';
         html += '<span class="mdl-list__item-primary-content">';
         html += '<i class="material-icons mdl-list__item-avatar">person</i>';
         html += '<span style="font-weight: bold">' + data.comments[i].login + '</span>';
@@ -273,9 +301,8 @@ function fillComments(data) {
         html += '</span>';
         html += '</span>';
         html += '</li>';
-
-        $('#commentList').html($('#commentList').html() + html);
     }
+    return html;
 }
 
 function closeCommentDialog() {

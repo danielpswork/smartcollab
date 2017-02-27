@@ -301,6 +301,7 @@ function saveComment() {
 
 function fillComments(data) {
 	var html = '';
+	var loggedUser = email.split("@")[0];
     for (var i =  0; i < data.comments.length; i++) {
         html += '<li class="mdl-list__item mdl-list__item--three-line" style="height:auto;">';
         html += '<span class="mdl-list__item-primary-content" style="height:auto;">';
@@ -311,6 +312,10 @@ function fillComments(data) {
         html += data.comments[i].text;
         html += '</span>';
         html += '</span>';
+	    if(data.comments[i].login === loggedUser){
+	    	html += '<button title="Editar comentário" id="editComment" onClick="editComment(&quot;' + data.id + ',' + data.comments[i].login + ',' + data.comments[i].dateTime + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button"> <i class="material-icons">mode_edit</i> </button>'
+	    	html += '<button title="Excluir comentário" id="deleteComment" onClick="deleteComment(&quot;' + data.id + ',' + data.comments[i].login + ',' + data.comments[i].dateTime + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button"> <i class="material-icons">delete</i> </button>'
+	    }
         html += '</li>';
     }
     return html;
@@ -346,6 +351,33 @@ function loadMyIdeias() {
 }
 
 function deleteCard(id){
+	var snackbarContainer = document.querySelector('#demo-toast-example');
+	
+	$.ajax({
+        url: '/cards/delete/' + id + '/' + email.split("@")[0],
+        type: 'DELETE'
+    }).then(function(data) {
+    	if(data === true){
+        	snackbar = {
+                    message: "Card removido com sucesso!",
+                    timeout: 2000
+        	};
+        	snackbarContainer.MaterialSnackbar.showSnackbar(snackbar);
+        	createCards();
+    	}else{
+    		snackbar = {
+                    message: "Card de outro usuário não pode ser removido!",
+                    timeout: 2000
+        	};
+        	snackbarContainer.MaterialSnackbar.showSnackbar(snackbar);
+    	}
+    }).catch(function(err) {
+        console.log('Error: ' + JSON.stringify(err));
+    })
+}
+
+
+function editComment(id){
 	var snackbarContainer = document.querySelector('#demo-toast-example');
 	
 	$.ajax({

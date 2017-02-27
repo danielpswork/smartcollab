@@ -5,6 +5,13 @@ function convertDate(date) {
     return date.dayOfMonth + "/" + date.monthValue + "/" + date.year;
 }
 
+function convertDateTime(dateTime) {
+    return ' - ' + dateTime.dayOfMonth + '/' +
+        dateTime.monthValue + '/' +
+        dateTime.year + ' - ' +
+        dateTime.hour + ':' +
+        dateTime.minute
+}
 
 $(document).ready(function() {
 
@@ -69,8 +76,6 @@ $(document).ready(function() {
     dialog.querySelector('.close').addEventListener('click', function() {
         dialog.close();
     });
-    
-    
 
 })
 
@@ -87,32 +92,33 @@ function createCards() {
                 element.login,
                 element.description,
                 element.dateTime,
-                3,
                 element.moderator,
-                element.likes, 
-                null,
-                element.comments);
+                element.likes,
+                element.comments,
+                null);
         })
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
 }
 
-function createCard(id, title, login, description, date, size, moderator, likes, local, comments) {
+function createCard(id, title, login, description, date, moderator, likes, comments, local) {
 
     var descriptionId = 'description_' + id;
 
     date = convertDate(date);
 
 
-    var cardHtml = '<div id="card' + id + '">';
-    cardHtml += '<div class="mdl-cell mdl-cell--' + size + '-col">';
+    var cardHtml = '';
+    cardHtml += '<div id="card' + id + '">';
+    cardHtml += '<div class="mdl-cell mdl-cell--' + 3 + '-col">';
     cardHtml += '		<div class="demo-card-wide mdl-card mdl-shadow--2dp">';
     cardHtml += '			<div class="mdl-card__title">';
     cardHtml += '				<h2 class="mdl-card__title-text">' + title + '</h2>';
     cardHtml += '			</div>';
     cardHtml += '		<div class="mdl-card__supporting-text">';
     cardHtml += '			<div id="' + descriptionId + '">' + description.substring(0, 230);
+
     if (description.length > 230) {
         cardHtml += '...</div>';
         cardHtml += '		<div class="mdl-tooltip mdl-tooltip--large" for="' + descriptionId + '">' + description + '</div>';
@@ -120,20 +126,20 @@ function createCard(id, title, login, description, date, size, moderator, likes,
         cardHtml += '</div>';
     }
     cardHtml += '<div style="position: absolute; bottom: 120px;" >';
-    cardHtml += 'Por: ' + login + '<br/>';
-    cardHtml += 'Data: ' + date + '<br/>';
-    cardHtml += 'Moderador: ' + (moderator == null ? "Não definido" : moderator);
+    cardHtml += '	Por: ' + login + '<br/>';
+    cardHtml += '	Data: ' + date + '<br/>';
+    cardHtml += '	Moderador: ' + (moderator == null ? "Não definido" : moderator);
     cardHtml += '</div>';
     cardHtml += '		</div>'
     cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
     cardHtml += '				<button  onclick="like(&quot;' + id + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">';
     cardHtml += '	  				<i class="material-icons md-light">thumb_up</i>';
     cardHtml += '				</button>';
-    cardHtml += '				<span style="top: 10px; right: 2px" class="mdl-badge" data-badge="' + + (likes == null ? 0 : likes.length)  +  '"></span>';
+    cardHtml += '				<span style="top: 10px; right: 2px" class="mdl-badge" data-badge="' + +(likes == null ? 0 : likes.length) + '"></span>';
     cardHtml += '				<button style="left:165px;" onclick="comment(&quot;' + id + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">';
     cardHtml += '	  				<i class="material-icons">comment</i>';
     cardHtml += '				</button>';
-    cardHtml += ' <span style="float:right; top: 15px; right: 2px" class="mdl-badge" data-badge="' + + (comments == null ? 0 : comments.length)  +  '"></span>';
+    cardHtml += ' <span style="float:right; top: 15px; right: 2px" class="mdl-badge" data-badge="' + +(comments == null ? 0 : comments.length) + '"></span>';
     cardHtml += '		</div>';
     if (moderator == null) {
         cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
@@ -170,11 +176,10 @@ function beModerator(id) {
             data.login,
             data.description,
             data.dateTime,
-            3,
             data.moderator,
             data.likes,
-            id,
-            data.comments);
+            data.comments,
+            id);
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
@@ -193,9 +198,9 @@ function like(id) {
             data.login,
             data.description,
             data.dateTime,
-            3,
             data.moderator,
             data.likes,
+            data.comments,
             id);
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
@@ -206,23 +211,17 @@ function comment(id) {
     document.querySelector('#commentDialog').showModal();
     $('#textFieldComment')[0].focus();
     currCard = id;
-    
+
     $.ajax({
         url: '/cards/' + id,
         method: 'GET',
         contentType: "application/json"
     }).then(function(data) {
-            fillComments(data); 
+        fillComments(data);
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
 
-}
-
-function closeCommentDialog() {
-    $('#textFieldComment')[0].value = "";
-    $('#commentList').html("");
-    document.querySelector('#commentDialog').close();
 }
 
 function saveComment() {
@@ -237,41 +236,56 @@ function saveComment() {
         data: JSON.stringify(data),
         contentType: "application/json"
     }).then(function(data) {
-    	
+
 
         $('#card' + data.id).html('');
-    	createCard(data.id,
-                data.title,
-                data.login,
-                data.description,
-                data.dateTime,
-                3,
-                data.moderator,
-                data.likes,
-                data.id,
-                data.comments);
-    	
-    	fillComments(data);
+        createCard(data.id,
+            data.title,
+            data.login,
+            data.description,
+            data.dateTime,
+            data.moderator,
+            data.likes,
+            data.comments,
+            data.id);
+
+        fillComments(data);
 
         $('#textFieldComment')[0].value = "";
         $('#textFieldComment')[0].focus();
-        
-        
+
+
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
 }
 
-function convertDateTime(dateTime){
-	return ' - '+ dateTime.dayOfMonth + '/' +
-	dateTime.monthValue + '/' +
-	dateTime.year + ' - ' + 
-	dateTime.hour + ':' +
-	dateTime.minute
+function fillComments(data) {
+    $('#commentList').html('');
+    for (var i = data.comments.length - 1; i >= 0; i--) {
+        var html = '<li class="mdl-list__item mdl-list__item--three-line">';
+        html += '<span class="mdl-list__item-primary-content">';
+        html += '<i class="material-icons mdl-list__item-avatar">person</i>';
+        html += '<span style="font-weight: bold">' + data.comments[i].login + '</span>';
+        html += '<span >' + convertDateTime(data.comments[i].dateTime) + '</span>';
+        html += '<span class="mdl-list__item-text-body">';
+        html += data.comments[i].text;
+        html += '</span>';
+        html += '</span>';
+        html += '</li>';
+
+        $('#commentList').html($('#commentList').html() + html);
+    }
 }
 
-function loadMyIdeias(){
-	
+function closeCommentDialog() {
+    $('#textFieldComment')[0].value = "";
+    $('#commentList').html("");
+    document.querySelector('#commentDialog').close();
+}
+
+function loadMyIdeias() {
+
     $('#cards').html('');
 
     $.ajax({
@@ -283,34 +297,12 @@ function loadMyIdeias(){
                 element.login,
                 element.description,
                 element.dateTime,
-                3,
                 element.moderator,
-                element.likes, 
-                null,
-                element.comments);
+                element.likes,
+                element.comments,
+                null);
         })
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
-}
-
-
-function fillComments(data) {
-	$('#commentList').html('');
-    for(var i = data.comments.length-1; i >=0 ; i--) {
-    		var html = '<li class="mdl-list__item mdl-list__item--three-line">';
-    	    html += '<span class="mdl-list__item-primary-content">';
-    	    html += '<i class="material-icons mdl-list__item-avatar">person</i>';
-    	    html += '<span style="font-weight: bold">'+ data.comments[i].login  +'</span>';
-    	    html += '<span >'+ convertDateTime(data.comments[i].dateTime) +'</span>';
-    	    html += '<span class="mdl-list__item-text-body">';
-    	    html += data.comments[i].text;
-    	    html += '</span>';
-    	    html += '</span>';
-    	    html += '</li>';
-
-    		$('#commentList').html($('#commentList').html() + html);
-    }
-
-   
 }

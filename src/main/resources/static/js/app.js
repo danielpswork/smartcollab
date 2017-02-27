@@ -273,6 +273,11 @@ function saveComment() {
             data.id);
 
         var html = '<h2>' + data.title + '</h2>';
+    	html += '<p>Criado por: ' + data.login + ' ' + convertDateTime(data.dateTime);
+    	if (data.moderator != null) {
+    		html += ' Moderador: ' + data.moderator;
+    	}
+    	html += '</p>';
         html += '<p>' + data.description + '</p>';
         html += '<ul id="commentList" class="demo-list-three mdl-list">'
         html += fillComments(data);

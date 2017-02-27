@@ -123,6 +123,9 @@ function createCard(id, title, login, description, date, moderator, likes, comme
     cardHtml += '			<div class="mdl-card__title">';
     cardHtml += '				<h2 class="mdl-card__title-text">' + title + '</h2>';
     cardHtml += '			</div>';
+    cardHtml += '		<div id="cardInfo">';
+    cardHtml += '			<i class="material-icons mdl-list__item-avatar">person</i>  ' + login + ' em ' + date + '<br/>';
+    cardHtml += '		</div>';
     cardHtml += '		<div class="mdl-card__supporting-text">';
     cardHtml += '			<div id="' + descriptionId + '">' + description.substring(0, 160);
 
@@ -132,11 +135,6 @@ function createCard(id, title, login, description, date, moderator, likes, comme
     } else {
         cardHtml += '</div>';
     }
-    cardHtml += '<div style="position: absolute; bottom: 120px;" >';
-    cardHtml += '	Por: ' + login + '<br/>';
-    cardHtml += '	Data: ' + date + '<br/>';
-    cardHtml += '	Moderador: ' + (moderator == null ? "Não definido" : moderator);
-    cardHtml += '</div>';
     cardHtml += '		</div>'
     cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
     cardHtml += '				<button  onclick="like(&quot;' + id + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">';
@@ -151,6 +149,10 @@ function createCard(id, title, login, description, date, moderator, likes, comme
     if (moderator == null) {
         cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
         cardHtml += '			<a onclick="beModerator(&quot;' + id + '&quot;)" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar </a>';
+        cardHtml += '		</div>';
+    } else {
+        cardHtml += '		<div class="mdl-card__actions mdl-card--border moderator">';
+        cardHtml += '			Moderado por ' + (moderator == null ? "ninguém" : moderator);
         cardHtml += '		</div>';
     }
     cardHtml += '		<div class="mdl-card__menu">';

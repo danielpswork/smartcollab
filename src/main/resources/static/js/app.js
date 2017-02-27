@@ -148,7 +148,7 @@ function createCard(id, title, login, description, date, moderator, likes, comme
     }
     cardHtml += '		<div class="mdl-card__menu">';
     cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
-    cardHtml += '				<i class="material-icons">share</i>';
+    cardHtml += '				<i class="material-icons" onclick="deleteCard(&quot;' + id + '&quot;)">close</i>';
     cardHtml += '			</button>';
     cardHtml += '		</div>';
     cardHtml += '	</div>';
@@ -302,6 +302,17 @@ function loadMyIdeias() {
                 element.comments,
                 null);
         })
+    }).catch(function(err) {
+        console.log('Error: ' + JSON.stringify(err));
+    })
+}
+
+function deleteCard(id){
+	$.ajax({
+        url: '/cards/delete/' + id + '/' + email.split("@")[0],
+        type: 'DELETE'
+    }).then(function(data) {
+    	createCards();
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })

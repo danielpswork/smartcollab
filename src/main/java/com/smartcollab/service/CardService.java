@@ -34,6 +34,11 @@ public class CardService {
         return card.getId();
     }
     
+    public void deleteCard(String id){
+    	Card card = repository.findOne(id);
+    	repository.delete(card);
+    }
+    
     public Card saveComment(List<String> data){
 		Card temp = new Card();
 		Comment aux = new Comment();

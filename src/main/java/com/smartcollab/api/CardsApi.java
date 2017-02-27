@@ -86,4 +86,17 @@ public class CardsApi {
     }
     
     
+    @RequestMapping(method = RequestMethod.DELETE, value = "/delete/{id}/{login}")
+    @ResponseBody
+    public Boolean deleteCardById(@PathVariable String id, @PathVariable String login) {
+    	Card card = service.getCardById(id);
+    	if(card.getLogin().equals(login)){
+    		service.deleteCard(id);
+    		return true;
+    	}
+    	return false;
+        
+    }
+    
+    
 }

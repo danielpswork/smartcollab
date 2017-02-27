@@ -124,9 +124,9 @@ function createCard(id, title, login, description, date, moderator, likes, comme
     cardHtml += '				<h2 class="mdl-card__title-text">' + title + '</h2>';
     cardHtml += '			</div>';
     cardHtml += '		<div class="mdl-card__supporting-text">';
-    cardHtml += '			<div id="' + descriptionId + '">' + description.substring(0, 230);
+    cardHtml += '			<div id="' + descriptionId + '">' + description.substring(0, 160);
 
-    if (description.length > 230) {
+    if (description.length > 160) {
         cardHtml += '...</div>';
         cardHtml += '		<div class="mdl-tooltip mdl-tooltip--large" for="' + descriptionId + '">' + description + '</div>';
     } else {

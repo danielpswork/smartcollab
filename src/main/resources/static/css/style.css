@@ -1,0 +1,68 @@
+      <style>
+         body {
+         font-family: Roboto;
+         }
+         #cardInfo {
+         width: 200px;
+         margin-top: 8px;
+         font-size: 1rem;
+         color: rgba(0,0,0,.54);
+         margin-left: 10px;
+         }
+         
+         .mdl-card__actions.mdl-card--border.moderator {
+        	color: rgb(63, 81, 181);
+        	font-size: 14px;
+         }
+         
+         #cardInfo i {
+         	height: 20px;
+         	width: 20px;
+         	font-size: 20px;
+         }
+         .demo-card-wide.mdl-card {
+         width: 300px;
+         }
+         .demo-card-wide>.mdl-card__title {
+         color: #fff;
+         height: 60px;
+         background: #1ABC9C;
+         }
+         .demo-card-wide>.mdl-card__supporting-text {
+         height: 150px;
+         }
+         .demo-card-wide>.mdl-card__menu {
+         color: #fff;
+         }
+         .user-image {
+         border-radius: 50%;
+         height: 40px;
+         }
+         .clickable {
+         cursor: pointer;
+         }
+         .user-label {
+         font-size: 15px;
+         padding-right: 5px;
+         }
+         .mdl-mini-footer {
+         position: relative;
+         left: 0;
+         right: 0;
+         bottom: -20px;
+         padding: 1rem;
+         background-color: rgb(63, 81, 181);
+         color: #fff;
+         }
+         
+         #show-dialog {
+			position: absolute;
+			bottom: 30px;
+			right: 60px;
+			width: 56px;	
+			}
+			
+			
+		}
+		
+      </style>

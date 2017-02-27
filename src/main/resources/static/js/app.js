@@ -25,14 +25,16 @@ $(document).ready(function() {
 
     $('.loggedContainer').hide();
     $('.container').show();
+    $('#show-dialog').hide();
 
     var snackbarContainer = document.querySelector('#demo-toast-example');
 
     $.ajax({
         url: '/user'
     }).then(function(data) {
-        $('.loggedContainer').show()
-        $('.container').hide()
+        $('.loggedContainer').show();
+        $('.container').hide();
+        $('#show-dialog').show();
         $('#userName').html(data.userAuthentication.details.name);
         $('#userImage').attr("src", data.userAuthentication.details.picture);
         

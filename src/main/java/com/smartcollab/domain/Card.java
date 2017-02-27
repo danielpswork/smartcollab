@@ -21,7 +21,7 @@ public class Card implements Serializable {
     @Id
     private String id;
     private String login;
-    private String avatarUrl;
+    private String avatarUrl1;
     private String title;
     private String description;
     private LocalDateTime dateTime;

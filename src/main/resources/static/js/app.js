@@ -89,7 +89,7 @@ $(document).ready(function() {
 function createCards() {
 
     $('#cards').html('');
-
+    dialog = document.querySelector('dialog#insertDialog');
     $.ajax({
         url: '/cards'
     }).then(function(data) {
@@ -107,6 +107,8 @@ function createCards() {
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
+    
+    dialog.close();
 }
 
 function createCard(id, title, login, description, date, moderator, likes, comments, local) {

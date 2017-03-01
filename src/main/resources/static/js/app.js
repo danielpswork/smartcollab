@@ -371,6 +371,30 @@ function loadMyIdeias() {
     })
 }
 
+function loadMoreRecent() {
+
+    $('#cards').html('');
+
+    $.ajax({
+        url: '/cards/bydate'
+    }).then(function(data) {
+        data.forEach(function(element) {
+            createCard(element.id,
+                element.title,
+                element.login,
+                element.description,
+                element.dateTime,
+                element.moderator,
+                element.likes,
+                element.comments,
+                element.avatarUrl,
+                null);
+        })
+    }).catch(function(err) {
+        console.log('Error: ' + JSON.stringify(err));
+    })
+}
+
 function deleteCard(id){
 	var snackbarContainer = document.querySelector('#demo-toast-example');
 	

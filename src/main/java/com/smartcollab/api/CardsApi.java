@@ -55,7 +55,6 @@ public class CardsApi {
     	return cards;
     }
 
-
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public String saveCard(@RequestBody Card card) {

@@ -43,6 +43,7 @@ $(document).ready(function() {
         $('#show-dialog').show();
         $('#userName').html(data.userAuthentication.details.name);
         $('#userImage').attr("src", data.userAuthentication.details.picture);
+        avatarUrl = data.userAuthentication.details.picture;
         
         avatarUrl = data.userAuthentication.details.picture;
         email = data.userAuthentication.details.email;
@@ -57,7 +58,8 @@ $(document).ready(function() {
         var data = {
             title: $('#titleForm').val(),
             description: $('#descriptionForm').val(),
-            login: email.split("@")[0]
+            login: email.split("@")[0],
+            avatarUrl:avatarUrl 
         }
 
         $.ajax({
@@ -113,6 +115,7 @@ function createCards() {
                 element.moderator,
                 element.likes,
                 element.comments,
+                element.avatarUrl,
                 null);
         })
     }).catch(function(err) {
@@ -122,7 +125,7 @@ function createCards() {
     dialog.close();
 }
 
-function createCard(id, title, login, description, date, moderator, likes, comments, local) {
+function createCard(id, title, login, description, date, moderator, likes, comments, avatarUrl, local) {
 
     var descriptionId = 'description_' + id;
     var currUserLogin = email.split("@")[0];
@@ -138,7 +141,8 @@ function createCard(id, title, login, description, date, moderator, likes, comme
     cardHtml += '				<h2 class="mdl-card__title-text">' + title + '</h2>';
     cardHtml += '			</div>';
     cardHtml += '		<div id="cardInfo">';
-    cardHtml += '			<i class="material-icons mdl-list__item-avatar">person</i>  ' + login + ' em ' + date + '<br/>';
+	cardHtml += ' 			<img src='+ avatarUrl + ' class="user-image">';
+    cardHtml += '			 ' + login + ' em ' + date + '<br/>';
     cardHtml += '		</div>';
     cardHtml += '		<div class="mdl-card__supporting-text">';
     cardHtml += '			<div id="' + descriptionId + '">' + description.substring(0, 160);
@@ -207,6 +211,7 @@ function beModerator(id) {
             data.moderator,
             data.likes,
             data.comments,
+            data.avatarUrl,
             id);
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
@@ -229,6 +234,7 @@ function like(id) {
             data.moderator,
             data.likes,
             data.comments,
+            data.avatarUrl,
             id);
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
@@ -271,7 +277,8 @@ function saveComment() {
 	
     var data = [currCard,
         email.split("@")[0],
-        $('#textFieldComment')[0].value
+        $('#textFieldComment')[0].value,
+        avatarUrl
     ];
 
     $.ajax({
@@ -291,6 +298,7 @@ function saveComment() {
             data.moderator,
             data.likes,
             data.comments,
+            data.avatarUrl,
             data.id);
 
         var html = '<h2>' + data.title + '</h2>';
@@ -323,7 +331,9 @@ function fillComments(data) {
     	
         html += '<li class="mdl-list__item mdl-list__item--three-line" style="height:auto;">';
         html += '<span class="mdl-list__item-primary-content" style="height:auto;">';
-        html += '<i class="material-icons mdl-list__item-avatar">person</i>';
+        html += '<i class="material-icons mdl-list__item-avatar">';
+        html += '<img style="margin-top: -20px" class="user-image" src="'+ data.avatarUrl +'">'
+        html += '</i>';
         html += '<span style="font-weight: bold">' + data.comments[i].login + '</span>';
         html += '<span >' + convertDateTime(data.comments[i].dateTime) + '</span>';
         html += '<span class="mdl-list__item-text-body" style="height:auto;">';
@@ -337,6 +347,8 @@ function fillComments(data) {
         html += '</li>';
     }
     return html;
+    
+   
 }
 
 function closeCommentDialog() {
@@ -365,6 +377,31 @@ function loadMyIdeias() {
                 element.moderator,
                 element.likes,
                 element.comments,
+                element.avatarUrl,
+                null);
+        })
+    }).catch(function(err) {
+        console.log('Error: ' + JSON.stringify(err));
+    })
+}
+
+function loadMoreRecent() {
+
+    $('#cards').html('');
+
+    $.ajax({
+        url: '/cards/bydate'
+    }).then(function(data) {
+        data.forEach(function(element) {
+            createCard(element.id,
+                element.title,
+                element.login,
+                element.description,
+                element.dateTime,
+                element.moderator,
+                element.likes,
+                element.comments,
+                element.avatarUrl,
                 null);
         })
     }).catch(function(err) {

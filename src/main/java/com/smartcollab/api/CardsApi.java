@@ -109,4 +109,94 @@ public class CardsApi {
 
 	}
 
+	// =======
+	// @Autowired
+	// private CardService service;
+	//
+	// @RequestMapping(method = RequestMethod.GET)
+	// @ResponseBody
+	// public List<Card> getCards() {
+	// return service.getCardsOrderedByLikes();
+	// }
+	//
+	// @RequestMapping(method = RequestMethod.GET, value = "/bydate")
+	// @ResponseBody
+	// public List<Card> getCardsOrderedByDate() {
+	// return service.getCardsOrderedByDate();
+	// }
+	//
+	// @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+	// @ResponseBody
+	// public Card getCardById(@PathVariable String id) {
+	// return service.getCardById(id);
+	// }
+	//
+	// @RequestMapping(method = RequestMethod.GET, value = "/login{login}")
+	// @ResponseBody
+	// public List<Card> getCardsByLogin(@PathVariable String login) {
+	// List<Card> cards = service.getCardsOrderedByLikes();
+	//
+	// for (Iterator<Card> iterator = cards.iterator(); iterator.hasNext();) {
+	// Card card = iterator.next();
+	// if (!card.getLogin().equals(login)) {
+	// iterator.remove();
+	// }
+	// }
+	// return cards;
+	// }
+	//
+	// @RequestMapping(method = RequestMethod.POST)
+	// @ResponseStatus(HttpStatus.CREATED)
+	// public String saveCard(@RequestBody Card card) {
+	// return service.saveCard(card);
+	// }
+	//
+	// @RequestMapping(method = RequestMethod.POST, value="/comment")
+	// @ResponseStatus(HttpStatus.CREATED)
+	// public Card saveComment(@RequestBody List<String> commentData) {
+	// return service.saveComment(commentData);
+	// }
+	//
+	// @RequestMapping(method = RequestMethod.GET, value = "/{id}/{moderator}")
+	// @ResponseBody
+	// public Card setModerator(@PathVariable String id,@PathVariable String
+	// moderator) {
+	// Card card = service.getCardById(id);
+	// card.setModerator(moderator);
+	// saveCard(card);
+	//
+	// return card;
+	// }
+	//
+	// @RequestMapping(method = RequestMethod.GET, value = "like/{id}/{login}")
+	// @ResponseBody
+	// public Card like(@PathVariable String id,@PathVariable String login) {
+	// Card card = service.getCardById(id);
+	// if(card.getLikes().contains(login)) {
+	// card.getLikes().remove(login);
+	// } else {
+	// card.getLikes().add(login);
+	// }
+	//
+	// saveCard(card);
+	// return card;
+	// }
+	//
+	//
+	// @RequestMapping(method = RequestMethod.DELETE, value =
+	// "/delete/{id}/{login}")
+	// @ResponseBody
+	// public Boolean deleteCardById(@PathVariable String id, @PathVariable
+	// String login) {
+	// Card card = service.getCardById(id);
+	// if(card.getLogin().equals(login)){
+	// service.deleteCard(id);
+	// return true;
+	// }
+	// return false;
+	//
+	// }
+	//
+	//
+	// >>>>>>> d7d0e0a1bb6720545e56635ce6bcd5e786e78716
 }

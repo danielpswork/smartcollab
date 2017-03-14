@@ -1,8 +1,15 @@
 var email;
 var currCard;
+var avatarUrl;
+
+var commentDate;
 
 function convertDate(date) {
     return date.dayOfMonth + "/" + date.monthValue + "/" + date.year;
+}
+
+function convertCommentDateTime(commentDateTime) {
+    return commentDateTime.dayOfMonth.toString() + commentDateTime.monthValue.toString() + commentDateTime.year.toString() + commentDateTime.hour.toString() + commentDateTime.minute.toString();
 }
 
 function convertDateTime(dateTime) {
@@ -36,6 +43,8 @@ $(document).ready(function() {
         $('#show-dialog').show();
         $('#userName').html(data.userAuthentication.details.name);
         $('#userImage').attr("src", data.userAuthentication.details.picture);
+        
+        avatarUrl = data.userAuthentication.details.picture;
         email = data.userAuthentication.details.email;
 
         createCards();
@@ -73,7 +82,7 @@ $(document).ready(function() {
             snackbarContainer.MaterialSnackbar.showSnackbar(data);
         })
     })
-
+    
     var dialog = document.querySelector('dialog#insertDialog');
     var showDialogButton = document.querySelector('#show-dialog');
     if (!dialog.showModal) {
@@ -116,6 +125,7 @@ function createCards() {
 function createCard(id, title, login, description, date, moderator, likes, comments, local) {
 
     var descriptionId = 'description_' + id;
+    var currUserLogin = email.split("@")[0];
 
     date = convertDate(date);
 
@@ -160,6 +170,11 @@ function createCard(id, title, login, description, date, moderator, likes, comme
         cardHtml += '		</div>';
     }
     cardHtml += '		<div class="mdl-card__menu">';
+    if (currUserLogin == login) {
+    	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
+    	cardHtml += '				<i class="material-icons" onClick="editCard(&quot;' + id + '&quot;)">edit</i>';
+    	cardHtml += '			</button>';
+    }
     cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
     cardHtml += '				<i class="material-icons" onclick="deleteCard(&quot;' + id + '&quot;)">close</i>';
     cardHtml += '			</button>';
@@ -302,18 +317,21 @@ function saveComment() {
 function fillComments(data) {
 	var html = '';
 	var loggedUser = email.split("@")[0];
+	var commentText;
     for (var i =  0; i < data.comments.length; i++) {
+    	commentText = data.comments[i].text;
+    	
         html += '<li class="mdl-list__item mdl-list__item--three-line" style="height:auto;">';
         html += '<span class="mdl-list__item-primary-content" style="height:auto;">';
         html += '<i class="material-icons mdl-list__item-avatar">person</i>';
         html += '<span style="font-weight: bold">' + data.comments[i].login + '</span>';
         html += '<span >' + convertDateTime(data.comments[i].dateTime) + '</span>';
         html += '<span class="mdl-list__item-text-body" style="height:auto;">';
-        html += data.comments[i].text;
+        html += commentText;
         html += '</span>';
         html += '</span>';
 	    if(data.comments[i].login === loggedUser){
-	    	html += '<button title="Editar comentário" id="editComment" onClick="editComment(&quot;' + data.id + ',' + data.comments[i].login + ',' + data.comments[i].dateTime + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button"> <i class="material-icons">mode_edit</i> </button>'
+	    	html += '<button title="Editar comentário" id="editComment" onClick="openEditCommentDialog(&quot;' + data.id + '&quot;,&quot;' + convertCommentDateTime(data.comments[i].dateTime) + '&quot;,&quot;' + commentText +'&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button"> <i class="material-icons">mode_edit</i> </button>'
 	    	html += '<button title="Excluir comentário" id="deleteComment" onClick="deleteComment(&quot;' + data.id + ',' + data.comments[i].login + ',' + data.comments[i].dateTime + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button"> <i class="material-icons">delete</i> </button>'
 	    }
         html += '</li>';
@@ -325,6 +343,10 @@ function closeCommentDialog() {
     $('#textFieldComment')[0].value = "";
     $('#commentList').html("");
     document.querySelector('#commentDialog').close();
+}
+
+function closeEditionDialog() {
+    document.querySelector('#editDialog').close();
 }
 
 function loadMyIdeias() {
@@ -376,12 +398,39 @@ function deleteCard(id){
     })
 }
 
+function openEditCommentDialog(id, date, commentText){
+	currCard = id;
+	commentDate = date;
+	document.querySelector('#editCommentDialog').showModal();
+    $('#textFieldEditComment')[0].focus();
+    $('#textFieldEditComment')[0].value = commentText;
+}
 
-function editComment(id){
+function closeEditCommentDialog() {
+    $('#textFieldEditComment')[0].value = "";
+    document.querySelector('#editCommentDialog').close();
+}
+
+function saveEditedComment() {
 	var snackbarContainer = document.querySelector('#demo-toast-example');
-	
+	var data = [currCard, email.split("@")[0], commentDate, $('#textFieldEditComment')[0].value];
+	 $.ajax({
+		 url: '/cards/comment/edit',
+		 method: 'POST',
+		 data: JSON.stringify(data),
+		 contentType: "application/json"
+	 }).then(function(data) {
+		 closeEditCommentDialog();
+		 closeCommentDialog();
+		 comment(currCard);
+	 }).catch(function(err) {
+		 console.log('Error: ' + JSON.stringify(err));
+	 })
+}
+
+function deleteComment(id, user, date){
 	$.ajax({
-        url: '/cards/delete/' + id + '/' + email.split("@")[0],
+        url: '/cards/deleteComment/' + id + '/' + email.split("@")[0] + "/" + date,
         type: 'DELETE'
     }).then(function(data) {
     	if(data === true){
@@ -402,3 +451,23 @@ function editComment(id){
         console.log('Error: ' + JSON.stringify(err));
     })
 }
+
+function editCard(id) {
+	document.querySelector('#editDialog').showModal();
+    
+    $.ajax({
+        url: '/cards/' + id,
+        method: 'GET',
+        contentType: "application/json"
+    }).then(function(data) {
+        $('#titleFormEdit').val(data.title);
+        $('#descriptionFormEdit').val(data.description);
+    }).catch(function(err) {
+        console.log('Error: ' + JSON.stringify(err));
+    })
+
+}
+
+function saveModifiedCard() {
+}
+

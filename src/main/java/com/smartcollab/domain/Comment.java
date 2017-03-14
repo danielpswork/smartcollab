@@ -8,5 +8,6 @@ import lombok.Data;
 public class Comment {
 	private String text;
 	private String login;
+	private String avatarUrl;
 	private LocalDateTime dateTime;
 }

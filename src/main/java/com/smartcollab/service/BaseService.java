@@ -29,9 +29,7 @@ public abstract class BaseService {
 	 * @return picture URL
 	 */
 	protected String getLoggedAvatarUrl() {
-		String email = getDetailByKey(PICTURE_KEY);
-
-		return email.split("@")[0];
+		return getDetailByKey(PICTURE_KEY);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -39,9 +37,9 @@ public abstract class BaseService {
 		OAuth2Authentication auth = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
 		UsernamePasswordAuthenticationToken userAuthentication = (UsernamePasswordAuthenticationToken) auth
 				.getUserAuthentication();
+
 		Map<String, String> details = (Map<String, String>) userAuthentication.getDetails();
-		String email = details.get(EMAIL_KEY);
-		return email;
+		return details.get(key);
 	}
 
 }

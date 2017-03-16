@@ -14,13 +14,20 @@ import com.smartcollab.utils.DateComparator;
 import com.smartcollab.utils.LikesComparator;
 
 @Service
-public class CardService {
+public class CardService extends BaseService {
 
 	@Autowired
 	private CardsRepository repository;
 
 	public List<Card> getCardsOrderedByLikes() {
 		List<Card> temp = repository.findAll();
+		Collections.sort(temp, new LikesComparator());
+
+		return temp;
+	}
+
+	public List<Card> getLoggedUserCards() {
+		List<Card> temp = repository.findByLogin(getLoggedUser());
 		Collections.sort(temp, new LikesComparator());
 
 		return temp;
@@ -38,6 +45,8 @@ public class CardService {
 	}
 
 	public String saveCard(Card newCard) {
+		newCard.setLogin(getLoggedUser());
+		newCard.setAvatarUrl(getLoggedAvatarUrl());
 
 		if (newCard.getId() == null) {
 			newCard.setDateTime(LocalDateTime.now());
@@ -52,18 +61,19 @@ public class CardService {
 	}
 
 	public Card saveComment(List<String> data) {
-		Card temp = new Card();
-		Comment aux = new Comment();
+		Card card = new Card();
+		Comment comment = new Comment();
 
 		String cardId = data.get(0);
-		temp = repository.findOne(cardId);
-		aux.setLogin(data.get(1));
-		aux.setText(data.get(2));
-		aux.setDateTime(LocalDateTime.now());
+		card = repository.findOne(cardId);
+		comment.setLogin(getLoggedUser());
+		comment.setText(data.get(1));
+		comment.setDateTime(LocalDateTime.now());
+		comment.setAvatarUrl(getLoggedAvatarUrl());
 
-		temp.getComments().add(aux);
+		card.getComments().add(comment);
 
-		return repository.save(temp);
+		return repository.save(card);
 
 	}
 

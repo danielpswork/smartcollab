@@ -1,6 +1,5 @@
 package com.smartcollab.api;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,18 +40,10 @@ public class CardsApi {
 		return service.getCardById(id);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/login{login}")
+	@RequestMapping(method = RequestMethod.GET, value = "/myideas")
 	@ResponseBody
-	public List<Card> getCardsByLogin(@PathVariable String login) {
-		List<Card> cards = service.getCardsOrderedByLikes();
-
-		for (Iterator<Card> iterator = cards.iterator(); iterator.hasNext();) {
-			Card card = iterator.next();
-			if (!card.getLogin().equals(login)) {
-				iterator.remove();
-			}
-		}
-		return cards;
+	public List<Card> getCardsByLogin() {
+		return service.getLoggedUserCards();
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

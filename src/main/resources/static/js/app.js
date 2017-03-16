@@ -4,6 +4,10 @@ var avatarUrl;
 
 var commentDate;
 
+var cardTemplate;
+var commentTemplate;
+
+
 function convertDate(date) {
     return date.dayOfMonth + "/" + date.monthValue + "/" + date.year;
 }
@@ -34,6 +38,26 @@ $(document).ready(function() {
     $('#show-dialog').hide();
 
     var snackbarContainer = document.querySelector('#demo-toast-example');
+    
+    Handlebars.registerHelper('ifCond', function(v1, v2, options) {
+    	  if(v1 === v2) {
+    	    return options.fn(this);
+    	  }
+    	  return options.inverse(this);
+    	});
+    
+    Handlebars.registerHelper('convertDateTime', function(dateTime) {
+    	return convertDateTime(dateTime);
+  	});
+    
+    Handlebars.registerHelper('convertCommentDateTime', function(dateTime) {
+    	return convertCommentDateTime(dateTime);
+  	});
+    
+    
+    
+    cardTemplate = Handlebars.compile($("#card-template").html());    
+    commentTemplate = Handlebars.compile($("#comment-template").html());
 
     $.ajax({
         url: '/user'
@@ -57,9 +81,7 @@ $(document).ready(function() {
     $('#saveFormButton').click(function() {
         var data = {
             title: $('#titleForm').val(),
-            description: $('#descriptionForm').val(),
-            login: email.split("@")[0],
-            avatarUrl:avatarUrl 
+            description: $('#descriptionForm').val()
         }
 
         $.ajax({
@@ -131,60 +153,15 @@ function createCard(id, title, login, description, date, moderator, likes, comme
     var currUserLogin = email.split("@")[0];
 
     date = convertDate(date);
-
-
-    var cardHtml = '';
-    cardHtml += '<div id="card' + id + '">';
-    cardHtml += '<div class="mdl-cell mdl-cell--' + 3 + '-col">';
-    cardHtml += '		<div class="demo-card-wide mdl-card mdl-shadow--2dp">';
-    cardHtml += '			<div class="mdl-card__title">';
-    cardHtml += '				<h2 class="mdl-card__title-text">' + title + '</h2>';
-    cardHtml += '			</div>';
-    cardHtml += '		<div id="cardInfo">';
-	cardHtml += ' 			<img src='+ avatarUrl + ' class="user-image">';
-    cardHtml += '			 ' + login + ' em ' + date + '<br/>';
-    cardHtml += '		</div>';
-    cardHtml += '		<div class="mdl-card__supporting-text">';
-    cardHtml += '			<div id="' + descriptionId + '">' + description.substring(0, 160);
-
-    if (description.length > 160) {
-        cardHtml += '...</div>';
-        cardHtml += '		<div class="mdl-tooltip mdl-tooltip--large" for="' + descriptionId + '">' + description + '</div>';
-    } else {
-        cardHtml += '</div>';
-    }
-    cardHtml += '		</div>'
-    cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
-    cardHtml += '				<button  onclick="like(&quot;' + id + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">';
-    cardHtml += '	  				<i class="material-icons md-light">thumb_up</i>';
-    cardHtml += '				</button>';
-    cardHtml += '				<span style="top: 10px; right: 2px" class="mdl-badge" data-badge="' + +(likes == null ? 0 : likes.length) + '"></span>';
-    cardHtml += '				<button style="left:165px;" onclick="comment(&quot;' + id + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">';
-    cardHtml += '	  				<i class="material-icons">comment</i>';
-    cardHtml += '				</button>';
-    cardHtml += ' <span style="float:right; top: 15px; right: 2px" class="mdl-badge" data-badge="' + +(comments == null ? 0 : comments.length) + '"></span>';
-    cardHtml += '		</div>';
-    if (moderator == null) {
-        cardHtml += '		<div class="mdl-card__actions mdl-card--border">';
-        cardHtml += '			<a onclick="beModerator(&quot;' + id + '&quot;)" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar </a>';
-        cardHtml += '		</div>';
-    } else {
-        cardHtml += '		<div class="mdl-card__actions mdl-card--border moderator">';
-        cardHtml += '			Moderado por ' + (moderator == null ? "ninguém" : moderator);
-        cardHtml += '		</div>';
-    }
-    cardHtml += '		<div class="mdl-card__menu">';
-    if (currUserLogin == login) {
-    	cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
-    	cardHtml += '				<i class="material-icons" onClick="editCard(&quot;' + id + '&quot;)">edit</i>';
-    	cardHtml += '			</button>';
-    }
-    cardHtml += '			<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">';
-    cardHtml += '				<i class="material-icons" onclick="deleteCard(&quot;' + id + '&quot;)">close</i>';
-    cardHtml += '			</button>';
-    cardHtml += '		</div>';
-    cardHtml += '	</div>';
-    cardHtml += '</div>';
+    
+    var context = {id: id, title: title, login: login, descriptionId: descriptionId, description: description,
+    				descriptionTrunc: description.substring(0, 160), descriptionNeedsTrunc: (description.length > 160), 
+    				date: date, moderator: moderator, 
+    				nomeModerador: (moderator == null ? "ninguém" : moderator), 
+    				likes: likes, likesCount: (likes == null ? 0 : likes.length), 
+    				comments: comments, commentsCount: (comments == null ? 0 : comments.length), 
+    				avatarUrl: avatarUrl, local: local, loggedUserCardOwner: (currUserLogin == login) };
+    var cardHtml = cardTemplate(context);
 
     if (local == undefined) {
         $('#cards').html($('#cards').html() + cardHtml);
@@ -251,20 +228,13 @@ function comment(id) {
         url: '/cards/' + id,
         method: 'GET',
         contentType: "application/json"
-    }).then(function(data) {
+    }).then(function(card) {
     	
-    	var html = '<h2>' + data.title + '</h2>';
-    	html += '<p>Criado por: ' + data.login + ' ' + convertDateTime(data.dateTime);
-    	if (data.moderator != null) {
-    		html += ' Moderador: ' + data.moderator;
-    	}
-    	html += '</p>';
-        html += '<p>' + data.description + '</p>';
-        html += '<ul id="commentList" class="demo-list-three mdl-list">'
-        html += fillComments(data);
-        html += '</ul>';
-
-        $('#commentModal').html($('#commentModal').html() + html);
+    	var loggedUser = email.split("@")[0];
+    	var context = {card: card, loggedUser: loggedUser}
+    	
+        var commentHtml = commentTemplate(context);
+        $('#commentModal').html($('#commentModal').html() + commentHtml);
         
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
@@ -276,9 +246,7 @@ function saveComment() {
 	$('#commentModal').html('');
 	
     var data = [currCard,
-        email.split("@")[0],
-        $('#textFieldComment')[0].value,
-        avatarUrl
+        $('#textFieldComment')[0].value
     ];
 
     $.ajax({
@@ -286,33 +254,27 @@ function saveComment() {
         method: 'POST',
         data: JSON.stringify(data),
         contentType: "application/json"
-    }).then(function(data) {
+    }).then(function(card) {
 
 
-        $('#card' + data.id).html('');
-        createCard(data.id,
-            data.title,
-            data.login,
-            data.description,
-            data.dateTime,
-            data.moderator,
-            data.likes,
-            data.comments,
-            data.avatarUrl,
-            data.id);
+        $('#card' + card.id).html('');
+        createCard(card.id,
+        	card.title,
+            card.login,
+            card.description,
+            card.dateTime,
+            card.moderator,
+            card.likes,
+            card.comments,
+            card.avatarUrl,
+            card.id);
 
-        var html = '<h2>' + data.title + '</h2>';
-    	html += '<p>Criado por: ' + data.login + ' ' + convertDateTime(data.dateTime);
-    	if (data.moderator != null) {
-    		html += ' Moderador: ' + data.moderator;
-    	}
-    	html += '</p>';
-        html += '<p>' + data.description + '</p>';
-        html += '<ul id="commentList" class="demo-list-three mdl-list">'
-        html += fillComments(data);
-        html += '</ul>';
+        var loggedUser = email.split("@")[0];
+    	var context = {card: card, loggedUser: loggedUser}
+    	
+        var commentHtml = commentTemplate(context);
 
-        $('#commentModal').html($('#commentModal').html() + html);
+        $('#commentModal').html($('#commentModal').html() + commentHtml);
         
         $('#textFieldComment')[0].value = "";
         $('#textFieldComment')[0].focus();
@@ -320,35 +282,6 @@ function saveComment() {
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
-}
-
-function fillComments(data) {
-	var html = '';
-	var loggedUser = email.split("@")[0];
-	var commentText;
-    for (var i =  0; i < data.comments.length; i++) {
-    	commentText = data.comments[i].text;
-    	
-        html += '<li class="mdl-list__item mdl-list__item--three-line" style="height:auto;">';
-        html += '<span class="mdl-list__item-primary-content" style="height:auto;">';
-        html += '<i class="material-icons mdl-list__item-avatar">';
-        html += '<img style="margin-top: -20px" class="user-image" src="'+ data.avatarUrl +'">'
-        html += '</i>';
-        html += '<span style="font-weight: bold">' + data.comments[i].login + '</span>';
-        html += '<span >' + convertDateTime(data.comments[i].dateTime) + '</span>';
-        html += '<span class="mdl-list__item-text-body" style="height:auto;">';
-        html += commentText;
-        html += '</span>';
-        html += '</span>';
-	    if(data.comments[i].login === loggedUser){
-	    	html += '<button title="Editar comentário" id="editComment" onClick="openEditCommentDialog(&quot;' + data.id + '&quot;,&quot;' + convertCommentDateTime(data.comments[i].dateTime) + '&quot;,&quot;' + commentText +'&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button"> <i class="material-icons">mode_edit</i> </button>'
-	    	html += '<button title="Excluir comentário" id="deleteComment" onClick="deleteComment(&quot;' + data.id + ',' + data.comments[i].login + ',' + data.comments[i].dateTime + '&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button"> <i class="material-icons">delete</i> </button>'
-	    }
-        html += '</li>';
-    }
-    return html;
-    
-   
 }
 
 function closeCommentDialog() {
@@ -366,7 +299,7 @@ function loadMyIdeias() {
     $('#cards').html('');
 
     $.ajax({
-        url: '/cards/login' + email.split("@")[0]
+        url: '/cards/myideas'
     }).then(function(data) {
         data.forEach(function(element) {
             createCard(element.id,

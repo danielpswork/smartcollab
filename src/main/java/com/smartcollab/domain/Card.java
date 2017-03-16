@@ -16,16 +16,17 @@ import lombok.Data;
 @Data
 public class Card implements Serializable {
 
-    private static final long serialVersionUID = -4816296699420136871L;
+	private static final long serialVersionUID = -4816296699420136871L;
 
-    @Id
-    private String id;
-    private String login;
-    private String title;
-    private String description;
-    private LocalDateTime dateTime;
-    private String moderator;
-    private Set<String> likes = new HashSet<String>();
-    private List<Comment> comments = new ArrayList<Comment>();
-    
+	@Id
+	private String id;
+	private String login;
+	private String title;
+	private String description;
+	private LocalDateTime dateTime;
+	private String moderator;
+	private String avatarUrl;
+	private Set<String> likes = new HashSet<String>();
+	private List<Comment> comments = new ArrayList<Comment>();
+
 }

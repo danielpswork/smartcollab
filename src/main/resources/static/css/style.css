@@ -23,7 +23,7 @@ body {
 .demo-card-wide>.mdl-card__title {
     color: #fff;
     height: 60px;
-    background: #1ABC9C;
+    background: #3F51B5;
 }
 .demo-card-wide>.mdl-card__supporting-text {
     height: 150px;
@@ -42,18 +42,10 @@ body {
     font-size: 15px;
     padding-right: 5px;
 }
-.mdl-mini-footer {
-    position: relative;
-    left: 0;
-    right: 0;
-    bottom: -20px;
-    padding: 1rem;
-    background-color: rgb(63, 81, 181);
-    color: #fff;
-}
+
 #show-dialog {
-    position: absolute;
-    bottom: 30px;
-    right: 60px;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
     width: 56px;
 }

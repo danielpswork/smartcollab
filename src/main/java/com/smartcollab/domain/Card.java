@@ -18,6 +18,7 @@ public class Card implements Serializable {
 
 	private static final long serialVersionUID = -4816296699420136871L;
 
+<<<<<<< HEAD
 	@Id
 	private String id;
 	private String login;
@@ -29,4 +30,17 @@ public class Card implements Serializable {
 	private Set<String> likes = new HashSet<String>();
 	private List<Comment> comments = new ArrayList<Comment>();
 
+=======
+    @Id
+    private String id;
+    private String login;
+    private String avatarUrl;
+    private String title;
+    private String description;
+    private LocalDateTime dateTime;
+    private String moderator;
+    private Set<String> likes = new HashSet<String>();
+    private List<Comment> comments = new ArrayList<Comment>();
+    
+>>>>>>> branch 'smartcollabAP' of https://github.com/danielpswork/smartcollab.git
 }

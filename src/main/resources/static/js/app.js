@@ -91,6 +91,10 @@ $(document).ready(function() {
             contentType: "application/json"
         }).then(function(cardId) {
             createCards();
+            
+            var dialog = document.querySelector('dialog#insertDialog');
+            dialog.close();
+            
             $('#titleForm').val('');
             $('#descriptionForm').val('');
             var data = {
@@ -142,9 +146,7 @@ function createCards() {
         })
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
-    })
-    
-    dialog.close();
+    });
 }
 
 function createCard(id, title, login, description, date, moderator, likes, comments, avatarUrl, local) {

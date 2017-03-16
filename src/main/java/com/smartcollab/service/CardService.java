@@ -45,10 +45,9 @@ public class CardService extends BaseService {
 	}
 
 	public String saveCard(Card newCard) {
-		newCard.setLogin(getLoggedUser());
-		newCard.setAvatarUrl(getLoggedAvatarUrl());
-
 		if (newCard.getId() == null) {
+			newCard.setLogin(getLoggedUser());
+			newCard.setAvatarUrl(getLoggedAvatarUrl());
 			newCard.setDateTime(LocalDateTime.now());
 		}
 		Card card = repository.save(newCard);

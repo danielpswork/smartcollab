@@ -277,7 +277,7 @@
 					<button title="Editar comentário" id="editComment" onClick="openEditCommentDialog(&quot;{{../card.id}}&quot;,&quot;{{convertCommentDateTime dateTime}}&quot;,&quot;{{text}}&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button"> 
 						<i class="material-icons">mode_edit</i> 
 					</button>
-					<button title="Excluir comentário" id="deleteComment" onClick="deleteComment(&quot;{{../card.id}},{{login}},{{dateTime}}&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">
+					<button title="Excluir comentário" id="deleteComment" onClick="deleteComment(&quot;{{../card.id}}&quot;,&quot;{{login}}&quot;,&quot;{{convertCommentDateTime dateTime}}&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">
 						<i class="material-icons">delete</i>
 					</button>
 				{{/ifCond}}

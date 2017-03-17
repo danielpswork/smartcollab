@@ -1,7 +1,10 @@
 package com.smartcollab.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,24 +85,44 @@ public class CardService extends BaseService {
 
 		String cardId = data.get(0);
 		String commentAuthor = data.get(1);
-		String commentDate = data.get(2);
 		String newComment = data.get(3);
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-M-yyyy-H-m-s");
+        LocalDateTime commentDate = LocalDateTime.parse(data.get(2), formatter);
 
 		cardTemp = repository.findOne(cardId);
 
 		for (Comment comment : cardTemp.getComments()) {
-			if (comment.getLogin().equalsIgnoreCase(commentAuthor)) {
-				StringBuffer buffer = new StringBuffer();
-				buffer.append(comment.getDateTime().getDayOfMonth()).append(comment.getDateTime().getMonthValue())
-						.append(comment.getDateTime().getYear()).append(comment.getDateTime().getHour())
-						.append(comment.getDateTime().getMinute());
-				if (buffer.toString().equals(commentDate)) {
-					comment.setDateTime(LocalDateTime.now());
-					comment.setText(newComment);
-					return repository.save(cardTemp);
-				}
+			if (comment.getLogin().equalsIgnoreCase(commentAuthor) && comment.getDateTime().withNano(0).equals(commentDate))  {
+				comment.setDateTime(LocalDateTime.now());
+				comment.setText(newComment);
+				break;
 			}
 		}
+		
+		return repository.save(cardTemp);
+	}
+
+	public Card deleteComment(List<String> data) {
+		Card cardTemp = new Card();
+
+		String cardId = data.get(0);
+		String commentAuthor = data.get(1);
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-M-yyyy-H-m-s");
+        LocalDateTime commentDate = LocalDateTime.parse(data.get(2), formatter);
+
+		cardTemp = repository.findOne(cardId);
+		
+		for (Iterator<Comment> iterator = cardTemp.getComments().iterator(); iterator.hasNext();) {
+			Comment comment = iterator.next();
+			if (comment.getLogin().equals(commentAuthor) &&
+				comment.getDateTime().withNano(0).equals(commentDate)) {
+				iterator.remove();
+				break;
+			}
+		}
+		
 		return repository.save(cardTemp);
 	}
 }

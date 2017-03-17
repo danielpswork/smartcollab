@@ -13,7 +13,12 @@ function convertDate(date) {
 }
 
 function convertCommentDateTime(commentDateTime) {
-    return commentDateTime.dayOfMonth.toString() + commentDateTime.monthValue.toString() + commentDateTime.year.toString() + commentDateTime.hour.toString() + commentDateTime.minute.toString();
+    return commentDateTime.dayOfMonth.toString() + "-" 
+    		+ commentDateTime.monthValue.toString() + "-" 
+    		+ commentDateTime.year.toString() + "-" 
+    		+ commentDateTime.hour.toString() + "-" 
+    		+ commentDateTime.minute.toString() + "-"
+    		+ commentDateTime.second.toString();
 }
 
 function convertDateTime(dateTime) {
@@ -221,7 +226,9 @@ function like(id) {
 }
 
 function comment(id) {
-    document.querySelector('#commentDialog').showModal();
+    if(!document.querySelector('#commentDialog').open){
+    	document.querySelector('#commentDialog').showModal();
+    }    		
     $('#textFieldComment')[0].focus();
     $('#commentModal').html('');
     currCard = id;
@@ -401,27 +408,20 @@ function saveEditedComment() {
 }
 
 function deleteComment(id, user, date){
-	$.ajax({
-        url: '/cards/deleteComment/' + id + '/' + email.split("@")[0] + "/" + date,
-        type: 'DELETE'
-    }).then(function(data) {
-    	if(data === true){
-        	snackbar = {
-                    message: "Card removido com sucesso!",
-                    timeout: 2000
-        	};
-        	snackbarContainer.MaterialSnackbar.showSnackbar(snackbar);
-        	createCards();
-    	}else{
-    		snackbar = {
-                    message: "Card de outro usuário não pode ser removido!",
-                    timeout: 2000
-        	};
-        	snackbarContainer.MaterialSnackbar.showSnackbar(snackbar);
-    	}
-    }).catch(function(err) {
-        console.log('Error: ' + JSON.stringify(err));
-    })
+	
+	var snackbarContainer = document.querySelector('#demo-toast-example');
+	var data = [currCard, user, date];
+	 $.ajax({
+		 url: '/cards/comment/delete',
+		 method: 'POST',
+		 data: JSON.stringify(data),
+		 contentType: "application/json"
+	 }).then(function(data) {
+		 comment(currCard);
+		 createCards();
+	 }).catch(function(err) {
+		 console.log('Error: ' + JSON.stringify(err));
+	 })
 }
 
 function editCard(id) {

@@ -35,6 +35,7 @@ public class CardService extends BaseService {
 
 	public List<Card> getCardsOrderedByDate() {
 		List<Card> temp = repository.findAll();
+		Collections.sort(temp, new LikesComparator());
 		Collections.sort(temp, new DateComparator());
 
 		return temp;

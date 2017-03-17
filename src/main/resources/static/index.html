@@ -43,8 +43,12 @@
 							sign in with google</button>
 					</div>
 				</nav>
+				<button id="show-dialog"
+					class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+					<i class="material-icons">add</i>
+				</button>
 			</div>
-
+			
 		</header>
 		<!-- MENU -->
 		<div class="mdl-layout__drawer">
@@ -60,8 +64,7 @@
 		</div>
 		<!-- CONTEÚDO -->
 		<main class="mdl-layout__content">
-		<div class="container"
-			style="width: 60%; padding-left: 30px; display: none;">
+		<div class="container" style="width: 60%; padding-left: 30px; display: none;">
 			<div class="mdl-grid">
 				<div class="mdl-cell mdl-cell--6-col">
 					<h3 id="frase">"As grandes idéias são aquelas nas quais a
@@ -77,41 +80,33 @@
 			</div>
 		</div>
 		<div class="loggedContainer">
-			<div class="mdl-grid" id="cards">
-				<div style="width: 100%; text-align: right">
-					<dialog id="insertDialog" class="mdl-dialog">
-					<h4 class="mdl-dialog__title">Nova ideia</h4>
-					<div class="mdl-dialog__content">
-						<div
-							class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-							<input class="mdl-textfield__input" type="text" id="titleForm"
-								maxlength="40"> <label class="mdl-textfield__label"
-								for="titleForm">Título</label>
-						</div>
-						<div
-							class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-							<textarea class="mdl-textfield__input" type="text" rows="3"
-								id="descriptionForm"></textarea>
-							<label class="mdl-textfield__label" for="descriptionForm">Descrição</label>
-						</div>
+			<div class="mdl-grid" id="cards"></div>
+			<div style="width: 100%; text-align: right">
+				<dialog id="insertDialog" class="mdl-dialog">
+				<h4 class="mdl-dialog__title">Nova ideia</h4>
+				<div class="mdl-dialog__content">
+					<div
+						class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						<input class="mdl-textfield__input" type="text" id="titleForm" maxlength="40">
+						<label class="mdl-textfield__label" for="titleForm">Título</label>
 					</div>
-					<div class="mdl-dialog__actions">
-						<button id="saveFormButton" type="button" class="mdl-button">Salvar</button>
-						<button type="button" class="mdl-button close">Cancelar</button>
+					<div
+						class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						<textarea class="mdl-textfield__input" type="text" rows="3"
+							id="descriptionForm"></textarea>
+						<label class="mdl-textfield__label" for="descriptionForm">Descrição</label>
 					</div>
-					</dialog>
-					<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-						<div class="mdl-snackbar__text"></div>
-						<button class="mdl-snackbar__action" type="button"></button>
-					</div>
-
 				</div>
-
+				<div class="mdl-dialog__actions">
+					<button id="saveFormButton" type="button" class="mdl-button">Salvar</button>
+					<button type="button" class="mdl-button close">Cancelar</button>
+				</div>
+				</dialog>
+				<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+					<div class="mdl-snackbar__text"></div>
+					<button class="mdl-snackbar__action" type="button"></button>
+				</div>
 			</div>
-			<button id="show-dialog"
-				class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
-				<i class="material-icons">add</i>
-			</button>
 		</div>
 
 		<dialog id="commentDialog" class="mdl-dialog">

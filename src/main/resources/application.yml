@@ -2,18 +2,14 @@ security:
     allowed-domains: ciandt.com
     oauth2:
         client:
-            clientId: 723068959254-f522es0iva0ecd514qcini5932j2a1gr.apps.googleusercontent.com
-            clientSecret: ysbZRM-VyVIW535g_6WUzxYD
+            clientId: 123
+            clientSecret: 123
             accessTokenUri: https://www.googleapis.com/oauth2/v3/token
             userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
             tokenName: oauth_token
             authenticationScheme: query
             clientAuthenticationScheme: form
-<<<<<<< HEAD
             scope: profile, email
-=======
-            scope: profile email
->>>>>>> smartcollabAP
         resource:
             userInfoUri: https://www.googleapis.com/userinfo/v2/me
             preferTokenInfo: false

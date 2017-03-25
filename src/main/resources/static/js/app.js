@@ -254,43 +254,47 @@ function comment(id) {
 function saveComment() {
 	$('#commentModal').html('');
 	
-    var data = [currCard,
-        $('#textFieldComment')[0].value
-    ];
-
-    $.ajax({
-        url: '/cards/comment',
-        method: 'POST',
-        data: JSON.stringify(data),
-        contentType: "application/json"
-    }).then(function(card) {
-
-
-        $('#card' + card.id).html('');
-        createCard(card.id,
-        	card.title,
-            card.login,
-            card.description,
-            card.dateTime,
-            card.moderator,
-            card.likes,
-            card.comments,
-            card.avatarUrl,
-            card.id);
-
-        var loggedUser = email.split("@")[0];
-    	var context = {card: card, loggedUser: loggedUser}
-    	
-        var commentHtml = commentTemplate(context);
-
-        $('#commentModal').html($('#commentModal').html() + commentHtml);
-        
-        $('#textFieldComment')[0].value = "";
-        $('#textFieldComment')[0].focus();
-
-    }).catch(function(err) {
-        console.log('Error: ' + JSON.stringify(err));
-    })
+	if($('#textFieldComment')[0].value === ""){
+		comment(currCard);
+	}else{
+	    var data = [currCard,
+	        $('#textFieldComment')[0].value
+	    ];
+	
+	    $.ajax({
+	        url: '/cards/comment',
+	        method: 'POST',
+	        data: JSON.stringify(data),
+	        contentType: "application/json"
+	    }).then(function(card) {
+	
+	
+	        $('#card' + card.id).html('');
+	        createCard(card.id,
+	        	card.title,
+	            card.login,
+	            card.description,
+	            card.dateTime,
+	            card.moderator,
+	            card.likes,
+	            card.comments,
+	            card.avatarUrl,
+	            card.id);
+	
+	        var loggedUser = email.split("@")[0];
+	    	var context = {card: card, loggedUser: loggedUser}
+	    	
+	        var commentHtml = commentTemplate(context);
+	
+	        $('#commentModal').html($('#commentModal').html() + commentHtml);
+	        
+	        $('#textFieldComment')[0].value = "";
+	        $('#textFieldComment')[0].focus();
+	
+	    }).catch(function(err) {
+	        console.log('Error: ' + JSON.stringify(err));
+	    })
+	}
 }
 
 function closeCommentDialog() {

@@ -48,7 +48,7 @@
 					<i class="material-icons">add</i>
 				</button>
 			</div>
-			
+
 		</header>
 		<!-- MENU -->
 		<div class="mdl-layout__drawer">
@@ -236,10 +236,10 @@
     {{else}}
 			<div class="mdl-card__actions mdl-card--border">
 				<a onclick="beModerator(&quot;{{id}}&quot;)" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Moderar </a>
-			</div>	
+			</div>
     {{/if}}
     		<div class="mdl-card__menu">
-    
+
 	{{#if false}}
     				<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
     					<i class="material-icons" onClick="editCard(&quot;{{id}}&quot;)">edit</i>
@@ -275,8 +275,8 @@
 					</span>
 				</span>
 	    		{{#ifCond login ../loggedUser}}
-					<button title="Editar comentário" id="editComment" onClick="openEditCommentDialog(&quot;{{../card.id}}&quot;,&quot;{{convertCommentDateTime dateTime}}&quot;,&quot;{{text}}&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button"> 
-						<i class="material-icons">mode_edit</i> 
+					<button title="Editar comentário" id="editComment" onClick="openEditCommentDialog(&quot;{{../card.id}}&quot;,&quot;{{convertCommentDateTime dateTime}}&quot;,&quot;{{text}}&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">
+						<i class="material-icons">mode_edit</i>
 					</button>
 					<button title="Excluir comentário" id="deleteComment" onClick="deleteComment(&quot;{{../card.id}}&quot;,&quot;{{login}}&quot;,&quot;{{convertCommentDateTime dateTime}}&quot;)" class="mdl-button mdl-js-button mdl-button--icon mdl-button">
 						<i class="material-icons">delete</i>

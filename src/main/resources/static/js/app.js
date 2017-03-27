@@ -13,10 +13,10 @@ function convertDate(date) {
 }
 
 function convertCommentDateTime(commentDateTime) {
-    return commentDateTime.dayOfMonth.toString() + "-" 
-    		+ commentDateTime.monthValue.toString() + "-" 
-    		+ commentDateTime.year.toString() + "-" 
-    		+ commentDateTime.hour.toString() + "-" 
+    return commentDateTime.dayOfMonth.toString() + "-"
+    		+ commentDateTime.monthValue.toString() + "-"
+    		+ commentDateTime.year.toString() + "-"
+    		+ commentDateTime.hour.toString() + "-"
     		+ commentDateTime.minute.toString() + "-"
     		+ commentDateTime.second.toString();
 }
@@ -43,25 +43,25 @@ $(document).ready(function() {
     $('#show-dialog').hide();
 
     var snackbarContainer = document.querySelector('#demo-toast-example');
-    
+
     Handlebars.registerHelper('ifCond', function(v1, v2, options) {
     	  if(v1 === v2) {
     	    return options.fn(this);
     	  }
     	  return options.inverse(this);
     	});
-    
+
     Handlebars.registerHelper('convertDateTime', function(dateTime) {
     	return convertDateTime(dateTime);
   	});
-    
+
     Handlebars.registerHelper('convertCommentDateTime', function(dateTime) {
     	return convertCommentDateTime(dateTime);
   	});
-    
-    
-    
-    cardTemplate = Handlebars.compile($("#card-template").html());    
+
+
+
+    cardTemplate = Handlebars.compile($("#card-template").html());
     commentTemplate = Handlebars.compile($("#comment-template").html());
 
     $.ajax({
@@ -73,7 +73,7 @@ $(document).ready(function() {
         $('#userName').html(data.userAuthentication.details.name);
         $('#userImage').attr("src", data.userAuthentication.details.picture);
         avatarUrl = data.userAuthentication.details.picture;
-        
+
         avatarUrl = data.userAuthentication.details.picture;
         email = data.userAuthentication.details.email;
 
@@ -96,10 +96,10 @@ $(document).ready(function() {
             contentType: "application/json"
         }).then(function(cardId) {
             createCards();
-            
+
             var dialog = document.querySelector('dialog#insertDialog');
             dialog.close();
-            
+
             $('#titleForm').val('');
             $('#descriptionForm').val('');
             var data = {
@@ -115,7 +115,7 @@ $(document).ready(function() {
             snackbarContainer.MaterialSnackbar.showSnackbar(data);
         })
     })
-    
+
     var dialog = document.querySelector('dialog#insertDialog');
     var showDialogButton = document.querySelector('#show-dialog');
     if (!dialog.showModal) {
@@ -126,6 +126,10 @@ $(document).ready(function() {
     });
     dialog.querySelector('.close').addEventListener('click', function() {
         dialog.close();
+    });
+
+    $('#logoutButton').click(function() {
+        $('#show-dialog').hide();
     });
 
 })
@@ -160,13 +164,13 @@ function createCard(id, title, login, description, date, moderator, likes, comme
     var currUserLogin = email.split("@")[0];
 
     date = convertDate(date);
-    
+
     var context = {id: id, title: title, login: login, descriptionId: descriptionId, description: description,
-    				descriptionTrunc: description.substring(0, 160), descriptionNeedsTrunc: (description.length > 160), 
-    				date: date, moderator: moderator, 
-    				nomeModerador: (moderator == null ? "ninguém" : moderator), 
-    				likes: likes, likesCount: (likes == null ? 0 : likes.length), 
-    				comments: comments, commentsCount: (comments == null ? 0 : comments.length), 
+    				descriptionTrunc: description.substring(0, 160), descriptionNeedsTrunc: (description.length > 160),
+    				date: date, moderator: moderator,
+    				nomeModerador: (moderator == null ? "ninguém" : moderator),
+    				likes: likes, likesCount: (likes == null ? 0 : likes.length),
+    				comments: comments, commentsCount: (comments == null ? 0 : comments.length),
     				avatarUrl: avatarUrl, local: local, loggedUserCardOwner: (currUserLogin == login) };
     var cardHtml = cardTemplate(context);
 
@@ -228,7 +232,7 @@ function like(id) {
 function comment(id) {
     if(!document.querySelector('#commentDialog').open){
     	document.querySelector('#commentDialog').showModal();
-    }    		
+    }
     $('#textFieldComment')[0].focus();
     $('#commentModal').html('');
     currCard = id;
@@ -238,13 +242,13 @@ function comment(id) {
         method: 'GET',
         contentType: "application/json"
     }).then(function(card) {
-    	
+
     	var loggedUser = email.split("@")[0];
     	var context = {card: card, loggedUser: loggedUser}
-    	
+
         var commentHtml = commentTemplate(context);
         $('#commentModal').html($('#commentModal').html() + commentHtml);
-        
+
     }).catch(function(err) {
         console.log('Error: ' + JSON.stringify(err));
     })
@@ -253,7 +257,7 @@ function comment(id) {
 
 function saveComment() {
 	$('#commentModal').html('');
-	
+
     var data = [currCard,
         $('#textFieldComment')[0].value
     ];
@@ -280,11 +284,11 @@ function saveComment() {
 
         var loggedUser = email.split("@")[0];
     	var context = {card: card, loggedUser: loggedUser}
-    	
+
         var commentHtml = commentTemplate(context);
 
         $('#commentModal').html($('#commentModal').html() + commentHtml);
-        
+
         $('#textFieldComment')[0].value = "";
         $('#textFieldComment')[0].focus();
 
@@ -353,7 +357,7 @@ function loadMoreRecent() {
 
 function deleteCard(id){
 	var snackbarContainer = document.querySelector('#demo-toast-example');
-	
+
 	$.ajax({
         url: '/cards/delete/' + id + '/' + email.split("@")[0],
         type: 'DELETE'
@@ -408,7 +412,7 @@ function saveEditedComment() {
 }
 
 function deleteComment(id, user, date){
-	
+
 	var snackbarContainer = document.querySelector('#demo-toast-example');
 	var data = [currCard, user, date];
 	 $.ajax({
@@ -426,7 +430,7 @@ function deleteComment(id, user, date){
 
 function editCard(id) {
 	document.querySelector('#editDialog').showModal();
-    
+
     $.ajax({
         url: '/cards/' + id,
         method: 'GET',
@@ -442,4 +446,3 @@ function editCard(id) {
 
 function saveModifiedCard() {
 }
-

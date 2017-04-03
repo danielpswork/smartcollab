@@ -429,19 +429,8 @@ function deleteComment(id, user, date){
 }
 
 function editCard(id) {
-	document.querySelector('#editDialog').showModal();
-
-    $.ajax({
-        url: '/cards/' + id,
-        method: 'GET',
-        contentType: "application/json"
-    }).then(function(data) {
-        $('#titleFormEdit').val(data.title);
-        $('#descriptionFormEdit').val(data.description);
-    }).catch(function(err) {
-        console.log('Error: ' + JSON.stringify(err));
-    })
-
+	var dialog = document.querySelector('dialog#insertDialog');
+	dialog.showModal();
 }
 
 function saveModifiedCard() {

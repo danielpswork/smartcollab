@@ -428,9 +428,14 @@ function deleteComment(id, user, date){
 	 })
 }
 
-function editCard(id) {
+function editCard(id, title, description) {
 	var dialog = document.querySelector('dialog#insertDialog');
 	dialog.showModal();
+	$("h4").text("Editar ideia");
+	$("#titleForm")[0].value = title;
+	$("#descriptionForm").text(description);
+	$("label[for='titleForm']").text("");
+	$("label[for='descriptionForm']").text("");
 }
 
 function saveModifiedCard() {
